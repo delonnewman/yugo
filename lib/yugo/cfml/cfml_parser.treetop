@@ -1,0 +1,298 @@
+# CFML grammar
+
+grammar CFML
+  rule content
+    (open_tag / close_tag / comment / quote / text)* <Yugo::CFML::Content>
+  end
+
+  rule text
+    !close_tag !open_tag [^<]+
+  end
+
+  rule quote
+    '#' expression '#' <Yugo::CFML::Quote>
+  end
+
+  rule tag_text
+    [^<]+
+  end
+
+  rule attribute
+    identifier space? '=' space? expression <Yugo::CFML::Attribute>
+  end
+
+  rule attribute_list
+    (space (attribute))*
+  end
+
+  rule open_tag
+    open_attribute_tag / open_statement_tag
+  end
+
+  rule open_attribute_tag
+    '<' identifier attribute_list space? '>' <Yugo::CFML::OpenTag>
+  end
+
+  rule open_statement_tag
+    '<' identifier space statement space? '>' <Yugo::CFML::OpenTag>
+  end
+
+  rule close_tag
+    '</' identifier space? '>' <Yugo::CFML::CloseTag>
+  end
+
+  rule comment
+    start_comment comment_content* end_comment <Yugo::CFML::Comment>
+  end
+
+  rule comment_content
+    !start_comment !end_comment .
+  end
+
+  rule start_comment
+    '<!--'
+  end
+
+  rule end_comment
+    '-->'
+  end
+
+  # Statements
+
+  rule statement
+    assignment / expression
+  end
+
+  rule assignment
+    'var' space identifier space? '=' space? expression
+  end
+
+  # Expressions
+
+  rule expression
+    space? (function_application / binary_operation / array_literal)
+  end
+
+  rule array_literal
+    '[]' /  '[' expression ']' / '[' expression (',' expression)+ ']'
+  end
+
+  rule binary_operation
+    logical_operation / comparative_operation / equality_operation / arithmetical_operation
+  end
+
+  rule logical_operation
+    comparative_operation space? logical_op space? logical_operation <Yugo::CFML::BinaryOperation>
+    /
+    comparative_operation
+  end
+
+  rule comparative_operation
+    equality_operation space? comparative_op space? comparative_operation <Yugo::CFML::BinaryOperation>
+    /
+    equality_operation
+  end
+
+  rule equality_operation
+    arithmetical_operation space? equality_op space? equality_operation <Yugo::CFML::BinaryOperation>
+    /
+    arithmetical_operation
+  end
+
+  rule arithmetical_operation
+    primary space? arithmetical_op space? arithmetical_operation <Yugo::CFML::BinaryOperation>
+    /
+    primary
+  end
+
+  rule primary
+    function_application / null / boolean / identifier / float / integer / string
+    /
+    paren_start space? expression space? paren_end
+  end
+
+  rule paren_start
+    '('
+  end
+
+  rule paren_end
+    ')'
+  end
+
+  # Operator sets
+
+  rule equality_op
+    eqv_op / is_op / equal_op / eq_op / isnot_op / notequal_op / neq_op
+  end
+
+  rule arithmetical_op
+    add_op / sub_op / mult_op / div_op / exp_op / mod_op
+  end
+
+  rule comparative_op
+    contains_op / doesnotcontain_op / greaterthanorequalto_op / gte_op / lessthanorequalto_op / lte_op /
+    gt_op / greaterthan_op / lt_op / lessthan_op
+  end
+
+  rule logical_op
+    and_op / xor_op / or_op / imp_op
+  end
+
+  # Operators
+
+  rule add_op
+    '+' <Yugo::CFML::AdditionOperator>
+  end
+
+  rule sub_op
+    '-' <Yugo::CFML::SubtractionOperator>
+  end
+
+  rule mult_op
+    '*' <Yugo::CFML::MulitiplicationOperator>
+  end
+
+  rule div_op
+    '/' <Yugo::CFML::DivisionOperator>
+  end
+
+  rule exp_op
+    '^' <Yugo::CFML::ExponentOperator>
+  end
+
+  rule mod_op
+    [mM] [oO] [dD] <Yugo::CFML::ModulusOperator>
+  end
+
+  rule is_op
+    [iI] [sS] <Yugo::CFML::EqualOperator>
+  end
+
+  rule equal_op
+    [eE] [qQ] [uU] [aA] [lL] <Yugo::CFML::EqualOperator>
+  end
+
+  rule eq_op
+    [eE] [qQ] <Yugo::CFML::EqualOperator>
+  end
+
+  rule isnot_op
+    [iI] [sS] [\s] [nN] [oO] [tT] <Yugo::CFML::NotEqualOperator>
+  end
+
+  rule notequal_op
+    [nN] [oO] [tT] [\s] [eE] [qQ] [uU] [aA] [lL] <Yugo::CFML::NotEqualOperator>
+  end
+
+  rule neq_op
+    [nN] [eE] [qQ] <Yugo::CFML::NotEqualOperator>
+  end
+
+  rule contains_op
+    [cC] [oO] [nN] [tT] [aA] [iI] [nN] [sS] <Yugo::CFML::ContainsOperator>
+  end
+
+  rule doesnotcontain_op
+    [dD] [oO] [eE] [sS] [\s] [nN] [oO] [tT] [\s] [cC] [oO] [nN] [tT] [aA] [iI] [nN] <Yugo::CFML::DoesNotContainOperator>
+  end
+
+  rule greaterthan_op
+    [gG] [rR] [eE] [aA] [tT] [eE] [rR] [\s] [tT] [hH] [aA] [nN] <Yugo::CFML::GreaterThanOperator>
+  end
+
+  rule gt_op
+    [gG] [tT] <Yugo::CFML::GreaterThanOperator>
+  end
+
+  rule or_equal_to
+    [\s] [oO] [rR] [\s] [eE] [qQ] [uU] [aA] [lL] [\s] [tT] [oO]
+  end
+
+  rule greaterthanorequalto_op
+    greaterthan_op or_equal_to <Yugo::CFML::GreaterThanOrEqualToOperator>
+  end
+
+  rule gte_op
+    [gG] [tT] [eE] <Yugo::CFML::GreaterThanOrEqualToOperator>
+  end
+
+  rule lessthan_op
+    [lL] [eE] [sS] [sS] [\s] [tT] [hH] [aA] [nN] <Yugo::CFML::LessThanOperator>
+  end
+
+  rule lt_op
+    [lL] [tT] <Yugo::CFML::LessThanOperator>
+  end
+
+  rule lessthanorequalto_op
+    lessthan_op or_equal_to <Yugo::CFML::LessThanOrEqualToOperator>
+  end
+
+  rule lte_op
+    [lL] [tT] [eE] <Yugo::CFML::LessThanOrEqualToOperator>
+  end
+
+  rule and_op
+    [aA] [nN] [dD] <Yugo::CFML::AndOperator>
+  end
+
+  rule or_op
+    [oO] [rR] <Yugo::CFML::OrOperator>
+  end
+
+  rule xor_op
+    [xX] [oO] [rR] <Yugo::CFML::XorOperator>
+  end
+
+  rule eqv_op
+    [eE] [qQ] [vV] <Yugo::CFML::EqvOperator>
+  end
+
+  rule imp_op
+    [iI] [mM] [pP] <Yugo::CFML::ImpOperator>
+  end
+
+  # Functions
+
+  rule function_application
+    identifier space? paren_start expression? space? ','? expression? space? ')' <Yugo::CFML::FunctionApplication>
+  end
+
+  # Literals
+
+  rule integer
+    ('+' / '-')? [0-9]+ <Yugo::CFML::IntegerLiteral>
+  end
+
+  rule float
+    ('+' / '-')? [0-9]+ (('.' [0-9]+) / ('e' [0-9]+)) <Yugo::CFML::FloatLiteral>
+  end
+
+  rule string
+    '"' ([^"\\] / "\\" . )* '"' <Yugo::CFML::StringLiteral>
+  end
+  
+  rule identifier
+    [a-zA-Z_] [a-zA-Z0-9_]* <Yugo::CFML::Identifier>
+  end
+
+  rule boolean
+    [tT] [rR] [uU] [eE] / [fF] [aA] [lL] [sS] [eE] <Yugo::CFML::BooleanLiteral>
+  end
+
+  rule null
+    [nN] [uU] [lL] [lL] <Yugo::CFML::NullLiteral>
+  end
+
+  # Whitespace
+
+  rule space
+    [\s]+
+  end
+
+  # End of File
+
+  rule end_of_file
+    !.
+  end
+end

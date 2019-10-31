@@ -1,0 +1,36 @@
+<h1>Hello</h1>
+<h2>URL Scope</h2>
+<table>
+  <tbody>
+    <% url.each do |k, v| %>
+      <tr>
+        <th><%= k %></th>
+        <td><%= v.inspect %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>CGI Scope</h2>
+<table>
+  <tbody>
+    <% cgi.each do |k, v| %>
+      <tr>
+        <th><%= k %></th>
+        <td><%= v.inspect %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Rack</h2>
+<table>
+  <tbody>
+    <% env.each do |k, v| %>
+      <tr>
+        <th><%= k %></th>
+        <td><%= v.inspect %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

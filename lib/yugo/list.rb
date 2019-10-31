@@ -19,6 +19,17 @@ module Yugo
       new(string.split(delim))
     end
 
+    def self.convert(value)
+      case value
+      when List
+        value
+      when String
+        from_string(value)
+      else
+        raise Yugo::TypeError, "Don't know how to convert #{value.inspect}:#{value.class} to a list"
+      end
+    end
+
     def initialize(elements)
       @elements = elements
     end

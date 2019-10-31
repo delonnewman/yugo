@@ -1,4 +1,6 @@
+require_relative 'list'
+require_relative 'struct'
+
 module Yugo
-  module Runtime
-  end
+  class TypeError < Exception; end
 end

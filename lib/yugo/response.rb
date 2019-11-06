@@ -12,6 +12,11 @@ module Yugo
       </ul>
     HTML
 
+    HTTP_505 = <<-HTML
+      <h1>505 Server Error</h1>
+      <p>Please see server logs for details.</p>
+    HTML
+
     def initialize(site, env)
       @site    = site
       @env     = env
@@ -23,7 +28,12 @@ module Yugo
       if page.nil?
         ['404', headers, [Page.new(site, env['REQUEST_PATH'], HTTP_404).render(env)]]
       else
-        ['200', headers, [page.call.render(env)]]
+        begin
+          ['200', headers, [page.call.render(env)]]
+        rescue => _
+          # TODO: add logger
+          ['500', headers, HTTP_505]
+        end
       end
     end
   end

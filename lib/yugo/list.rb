@@ -1,3 +1,5 @@
+require 'forwardable'
+
 module Yugo
   class List
     include Enumerable

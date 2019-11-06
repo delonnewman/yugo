@@ -1,8 +1,14 @@
+PATH
+  remote: ../el
+  specs:
+    el (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.3)
     polyglot (0.3.5)
+    rack (2.0.7)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
       rspec-expectations (~> 3.9.0)
@@ -23,6 +29,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  el!
+  rack
   rspec
   treetop
 

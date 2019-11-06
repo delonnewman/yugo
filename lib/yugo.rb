@@ -1,3 +1,4 @@
+require 'el'
 require 'erb'
 
 require_relative 'yugo/runtime'

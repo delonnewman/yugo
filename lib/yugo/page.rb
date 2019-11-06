@@ -1,5 +1,7 @@
 module Yugo
   class Page
+    include Runtime
+
     CGI_VARIABLES = {
       'SERVER_SOFTWARE'   => 'SERVER_SOFTWARE',
       'SERVER_NAME'       => 'SERVER_NAME',
@@ -39,7 +41,7 @@ module Yugo
       @site = site
       @request_path = request_path
       @content = content
-      @variables = {} # This will need to be a Yugo::Struct
+      @variables = Yugo::Struct.new
       @server = @site.server
     end
 
@@ -57,13 +59,13 @@ module Yugo
     private
 
       def _cgi_variables(env)
-        CGI_VARIABLES.reduce({}) do |h, (k, v)|
+        CGI_VARIABLES.reduce(Yugo::Struct.new) do |h, (k, v)|
           h.merge(k => env[v])
         end
       end
 
       def _url_variables(env)
-        env['QUERY_STRING'].split('&').map { |x| x.split('=') }.to_h
+        Yugo::Struct[env.fetch('QUERY_STRING', '').split('&').map { |x| x.split('=') }]
       end
   end
 end

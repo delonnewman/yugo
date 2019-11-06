@@ -2,8 +2,6 @@ module Yugo
   class Site
     class PageDoesNotExist < Exception; end
 
-    include Runtime
-
     DEFAULT_PAGES_PATH = '/pages'
 
     attr_reader :pages_path
@@ -15,7 +13,7 @@ module Yugo
 
     def initialize(config = {})
       @config = config
-      @server = {}
+      @server = Yugo::Struct.new
       @pages_path = File.join(Dir.pwd, config.fetch(:pages_path, DEFAULT_PAGES_PATH))
       @pages = Dir["#{@pages_path}/**/*"].entries.reduce({}) do |h, file|
         path = file.gsub(@pages_path, '').gsub(File.extname(file), '')
@@ -23,6 +21,7 @@ module Yugo
       end
     end
 
+    # Rack interface
     def call(env)
       Response.new(self, env).render
     end

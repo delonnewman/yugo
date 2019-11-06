@@ -37,6 +37,9 @@ module Yugo
     # 'url' scope
     attr_reader :url
 
+    # 'form' scope
+    attr_reader :form
+
     def initialize(site, request_path, content)
       @site = site
       @request_path = request_path
@@ -50,9 +53,11 @@ module Yugo
     end
 
     def render(env)
-      # populate cgi, and url scopes
-      @cgi = _cgi_variables(env)
-      @url = _url_variables(env)
+      # populate cgi, url, and form scopes
+      @cgi  = _cgi_variables(env)
+      @url  = _url_variables(env)
+      @form = _form_variables(env)
+      p @form
       ERB.new(@content).result(binding)
     end
 
@@ -66,6 +71,10 @@ module Yugo
 
       def _url_variables(env)
         Yugo::Struct[env.fetch('QUERY_STRING', '').split('&').map { |x| x.split('=') }]
+      end
+
+      def _form_variables(env)
+        Yugo::Struct[env.fetch('rack.input', StringIO.new).read.split('&').map { |x| x.split('=') }]
       end
   end
 end

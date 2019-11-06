@@ -30,8 +30,12 @@ module Yugo
       else
         begin
           ['200', headers, [page.call.render(env)]]
-        rescue => _
+        rescue => e
           # TODO: add logger
+          $stderr.puts "#{Time.now} ERROR: #{e.message}"
+          e.backtrace.each do |trace|
+            $stderr.puts "\t#{trace}"
+          end
           ['500', headers, HTTP_505]
         end
       end

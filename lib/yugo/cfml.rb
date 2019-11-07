@@ -18,8 +18,23 @@ require_relative 'cfml/integer'
 require_relative 'cfml/float'
 require_relative 'cfml/string'
 require_relative 'cfml/quote'
+require_relative 'cfml/identifier'
 require_relative 'cfml/binary_operation'
 require_relative 'cfml/unary_operation'
 require_relative 'cfml/operators'
 require_relative 'cfml/assignment'
 require_relative 'cfml/parser'
+
+module Yugo
+  module CFML
+    def compile(node)
+      p node
+    end
+
+    def compile_string(str)
+      compile(Parser.parse(str))
+    end
+
+    extend self
+  end
+end

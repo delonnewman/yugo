@@ -1,5 +1,8 @@
 require 'treetop'
 
+require_relative 'ruby'
+require_relative 'erb'
+
 require_relative 'cfml/node'
 require_relative 'cfml/syntax'
 require_relative 'cfml/content'
@@ -21,14 +24,28 @@ require_relative 'cfml/quote'
 require_relative 'cfml/identifier'
 require_relative 'cfml/binary_operation'
 require_relative 'cfml/unary_operation'
+require_relative 'cfml/function_application'
 require_relative 'cfml/operators'
 require_relative 'cfml/assignment'
 require_relative 'cfml/parser'
 
 module Yugo
   module CFML
-    def compile(node)
+    def ruby_ast(node)
       p node
+      if node.respond_to?(:ruby_ast)
+        node.ruby_ast
+      else
+        Yugo::ERB::Text.new(node.text_value)
+      end
+    end
+
+    def ruby_ast_from_string(str)
+      ruby_ast(Parser.parse(str))
+    end
+
+    def compile(node)
+      ruby_ast(node).compile
     end
 
     def compile_string(str)

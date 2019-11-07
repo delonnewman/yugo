@@ -70,7 +70,7 @@ grammar CFML
   # Expressions
 
   rule expression
-    space? (function_application / binary_operation / array_literal)
+    space? (function_application / binary_operation / array_literal) <Yugo::CFML::Expression>
   end
 
   rule array_literal
@@ -126,11 +126,11 @@ grammar CFML
   end
 
   rule arithmetical_op
-    add_op / sub_op / mult_op / div_op / exp_op / mod_op
+    mult_op / div_op / add_op / sub_op / exp_op / mod_op
   end
 
   rule comparative_op
-    contains_op / doesnotcontain_op / greaterthanorequalto_op / gte_op / lessthanorequalto_op / lte_op /
+    concat_op / contains_op / doesnotcontain_op / greaterthanorequalto_op / gte_op / lessthanorequalto_op / lte_op /
     gt_op / greaterthan_op / lt_op / lessthan_op
   end
 
@@ -149,7 +149,7 @@ grammar CFML
   end
 
   rule mult_op
-    '*' <Yugo::CFML::MulitiplicationOperator>
+    '*' <Yugo::CFML::MultiplicationOperator>
   end
 
   rule div_op
@@ -158,6 +158,10 @@ grammar CFML
 
   rule exp_op
     '^' <Yugo::CFML::ExponentOperator>
+  end
+
+  rule concat_op
+    '&' <Yugo::CFML::ConcatenationOperator>
   end
 
   rule mod_op
@@ -255,7 +259,11 @@ grammar CFML
   # Functions
 
   rule function_application
-    identifier space? paren_start expression? space? ','? expression? space? ')' <Yugo::CFML::FunctionApplication>
+    identifier function_arguments <Yugo::CFML::FunctionApplication>
+  end
+
+  rule function_arguments
+    '(' space? ')' /  '(' space? expression space? ')' / '(' space? expression space? (',' expression)+ ')'
   end
 
   # Literals

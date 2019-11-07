@@ -6,7 +6,8 @@ module Yugo
       end
 
       def compile
-        ERB.new(@template).result(binding)
+        puts "#{self}: #{@template.inspect}"
+        ::ERB.new(@template).result(binding)
       end
     end
   end

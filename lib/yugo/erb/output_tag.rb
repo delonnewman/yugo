@@ -6,7 +6,7 @@ module Yugo
       end
 
       def compile
-        "<%= #{code.compile} %>"
+        "<%= #{@code.compile} %>"
       end
     end
   end

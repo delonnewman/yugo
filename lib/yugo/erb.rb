@@ -1,0 +1,6 @@
+require_relative 'erb/syntax'
+require_relative 'erb/comment_tag'
+require_relative 'erb/content'
+require_relative 'erb/output_tag'
+require_relative 'erb/statement_tag'
+require_relative 'erb/text'

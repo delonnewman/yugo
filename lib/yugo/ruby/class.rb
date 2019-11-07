@@ -1,7 +1,7 @@
 module Yugo
   module Ruby
     class Class < Syntax
-      TEMPLATE <<-RUBY
+      TEMPLATE = <<-RUBY
         <%- if parent -%>
         class <%= name.compile %> < <%= parent.compile %>
         <%- else -%>
@@ -16,6 +16,7 @@ module Yugo
       attr_reader :name, :parent, :methods
 
       def initialize(name, methods, parent = nil)
+        super(TEMPLATE)
         @name = name
         @methods = methods
         @parent = parent

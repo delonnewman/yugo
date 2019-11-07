@@ -1,10 +1,9 @@
 module Yugo
   module Tags
-    class CFSet
+    class Set
       attr_reader :name, :value, :function_scope
 
-      def initialize(attributes)
-        @attributes = attributes
+      def initialize(assignment)
       end
 
       alias function_scope? function_scope

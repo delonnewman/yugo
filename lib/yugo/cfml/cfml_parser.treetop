@@ -285,7 +285,15 @@ grammar CFML
   end
 
   rule boolean
-    [tT] [rR] [uU] [eE] / [fF] [aA] [lL] [sS] [eE] <Yugo::CFML::Boolean>
+    true / false
+  end
+
+  rule true
+    [tT] [rR] [uU] [eE] <Yugo::CFML::Boolean>
+  end
+
+  rule false
+    [fF] [aA] [lL] [sS] [eE] <Yugo::CFML::Boolean>
   end
 
   rule null

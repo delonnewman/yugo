@@ -41,7 +41,7 @@ module Yugo
     end
 
     def ruby_ast_from_string(str)
-      ruby_ast(Parser.parse(str))
+      ruby_ast(parse(str))
     end
 
     def compile(node)
@@ -49,7 +49,11 @@ module Yugo
     end
 
     def compile_string(str)
-      compile(Parser.parse(str))
+      compile(parse(str))
+    end
+
+    def parse(str)
+      Parser.parse(str)
     end
 
     extend self

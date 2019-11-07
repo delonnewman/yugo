@@ -7,7 +7,7 @@ module Yugo
           when Quote
             Yugo::ERB::OutputTag.new(elem.ruby_ast)
           else
-            Yugo::CFML.ruby_ast(e)
+            Yugo::CFML.ruby_ast(elem)
           end
         end
         Yugo::ERB::Content.new(nodes)

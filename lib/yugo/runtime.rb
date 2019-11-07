@@ -1,5 +1,6 @@
 require_relative 'list'
 require_relative 'struct'
+require_relative 'cfml'
 
 module Yugo
   class TypeError < Exception; end
@@ -11,6 +12,10 @@ module Yugo
       else
         value.inspect
       end
+    end
+
+    def h(str)
+      CGI.escape_html(str)
     end
   end
 end

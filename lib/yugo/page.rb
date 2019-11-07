@@ -58,7 +58,13 @@ module Yugo
       @url  = _url_variables(env)
       @form = _form_variables(env)
       p @form
-      ERB.new(@content).result(binding)
+      res = ::ERB.new(@content).result(binding)
+      puts res
+      res
+    end
+
+    def evaluate_string(str)
+      ::ERB.new(Yugo::CFML.compile_string(str)).result(binding)
     end
 
     private
@@ -70,11 +76,23 @@ module Yugo
       end
 
       def _url_variables(env)
-        Yugo::Struct[env.fetch('QUERY_STRING', '').split('&').map { |x| x.split('=') }]
+        _parse_uri_encoded_content(env.fetch('QUERY_STRING', ''))
       end
 
       def _form_variables(env)
-        Yugo::Struct[env.fetch('rack.input', StringIO.new).read.split('&').map { |x| x.split('=') }]
+        _parse_uri_encoded_content(env.fetch('rack.input', StringIO.new).read)
+      end
+
+      def _parse_uri_encoded_content(content)
+        puts "CONTENT: #{content.inspect}"
+        pairs = content.split('&').map { |x| x.split('=') }.map do |(key, value)|
+          [_uri_decode(key), _uri_decode(value)]
+        end
+        Yugo::Struct[pairs]
+      end
+
+      def _uri_decode(str)
+        URI.decode(str.gsub('+', ' '))
       end
   end
 end

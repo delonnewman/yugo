@@ -7,7 +7,7 @@ module Yugo
       <pre><%= env['REQUEST_PATH'] %></pre>
       <ul>
         <% site.pages.keys.each do |page| %>
-          <li><%= page %></li>
+          <li><a href="<%= page %>"><%= page %></a></li>
         <% end %>
       </ul>
     HTML

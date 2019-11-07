@@ -1,0 +1,40 @@
+<% if form['expression'] %>
+  <table>
+    <tr>
+      <th>ColdFusion</th>
+      <td>
+        <code>
+          <%=h form['expression'] %>
+        </code>
+      </td>
+    </tr>
+    <tr>
+      <th>AST</th>
+      <td>
+        <code>
+          <%=h Yugo::CFML.ruby_ast_from_string(form['expression']).inspect %>
+        </code>
+      </td>
+    </tr>
+    <tr>
+      <th>Ruby</th>
+      <td>
+        <code>
+          <%=h Yugo::CFML.compile_string(form['expression']) %>
+        </code>
+      </td>
+    </tr>
+    <tr>
+      <th>Result</th>
+      <td>
+        <code>
+          <%=h evaluate_string(form['expression']) %>
+        </code>
+      </td>
+    </tr>
+  </table>
+<% end %>
+<form action="coldfusion" method="post">
+  <textarea name="expression"><%= form['expression'] %></textarea>
+  <button>Evaluate</button>
+</form>

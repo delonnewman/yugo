@@ -16,10 +16,13 @@ module Yugo
       attr_reader :name, :parent, :methods
 
       def initialize(name, methods, parent = nil)
-        super(TEMPLATE)
         @name = name
         @methods = methods
         @parent = parent
+      end
+
+      def compile
+        super(TEMPLATE)
       end
 
       def to_sexp

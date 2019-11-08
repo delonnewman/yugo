@@ -12,10 +12,13 @@ module Yugo
       attr_reader :name, :arguments, :body
 
       def initialize(name, arguments, body)
-        super(TEMPLATE)
         @name = name
         @arguments = arguments
         @body = body
+      end
+
+      def compile
+        super(TEMPLATE)
       end
 
       def to_sexp

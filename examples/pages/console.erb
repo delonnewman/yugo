@@ -4,6 +4,11 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
+  <nav class="navbar navbar-light bg-light mb-2">
+    <a class="navbar-brand" href="#">
+      Yugo Console
+    </a>
+  </nav>
 <main class="container-fluid row">
   <div class="col">
     <form action="console" method="post">
@@ -17,11 +22,7 @@
         <tr>
           <th>Ruby / ERB</th>
           <td>
-            <pre>
-            <code>
-              <%=h Yugo::CFML.compile_string(form['expression']) %>
-            </code>
-            </pre>
+            <pre><code><%=h Yugo::CFML.compile_string(form['expression']) %></code></pre>
           </td>
         </tr>
         <tr>

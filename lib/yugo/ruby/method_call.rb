@@ -8,9 +8,12 @@ module Yugo
       attr_reader :identifier, :arguments
 
       def initialize(identifier, arguments)
-        super(TEMPLATE)
         @identifier = identifier
         @arguments = arguments
+      end
+
+      def compile
+        super(TEMPLATE)
       end
 
       def to_sexp

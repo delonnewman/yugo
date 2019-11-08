@@ -9,9 +9,12 @@ module Yugo
       attr_reader :assigned
 
       def initialize(assignee, assigned)
-        super(TEMPLATE)
         @assignee = assignee
         @assigned = assigned
+      end
+
+      def compile
+        super(TEMPLATE)
       end
 
       def to_sexp

@@ -1,13 +1,8 @@
 module Yugo
   module Ruby
     class Syntax
-      def initialize(template)
-        @template = template
-      end
-
-      def compile
-        puts "#{self}: #{@template.inspect}"
-        ::ERB.new(@template).result(binding)
+      def compile(template)
+        ::ERB.new(template.lines.map { |x| x.chomp.sub(/^\s+/, '') }.join('')).result(binding)
       end
     end
   end

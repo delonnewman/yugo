@@ -4,6 +4,7 @@ module Yugo
       attr_reader :name, :value, :function_scope
 
       def initialize(assignment)
+
       end
 
       alias function_scope? function_scope

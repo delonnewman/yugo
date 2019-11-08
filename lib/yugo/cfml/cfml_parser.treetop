@@ -2,11 +2,31 @@
 
 grammar CFML
   rule content
-    (open_tag / close_tag / comment / quote / text)* <Yugo::CFML::Content>
+    (tag / comment / text)* <Yugo::CFML::Content>
   end
 
   rule text
-    !close_tag !open_tag [^<]+
+    [^<]+
+  end
+
+  rule tag
+    output_tag / set_tag
+  end
+
+  rule output_tag
+    '<cfoutput' attribute_list space? '>' space? tag_content space? '</cfoutput>' <Yugo::CFML::ContentTag>
+  end
+
+  rule char
+    .
+  end
+
+  rule tag_content
+    (quote / comment / text / space)* <Yugo::CFML::Content>
+  end
+
+  rule set_tag
+    '<cfset' space? statement? space? '>' <Yugo::CFML::EmptyTag>
   end
 
   rule quote
@@ -37,8 +57,8 @@ grammar CFML
     '<' identifier space statement space? '>' <Yugo::CFML::OpenTag>
   end
 
-  rule close_tag
-    '</' identifier space? '>' <Yugo::CFML::CloseTag>
+  rule end_tag
+    '</' identifier space? '>' <Yugo::CFML::EndTag>
   end
 
   rule comment
@@ -64,7 +84,7 @@ grammar CFML
   end
 
   rule assignment
-    'var' space identifier space? '=' space? expression
+    ('var' space)? identifier space? '=' space? expression
   end
 
   # Expressions
@@ -122,7 +142,7 @@ grammar CFML
   # Operator sets
 
   rule equality_op
-    eqv_op / is_op / equal_op / eq_op / isnot_op / notequal_op / neq_op
+    eqv_op / is_op / equal_op / equals_op / eq_op / isnot_op / notequal_op / neq_op
   end
 
   rule arithmetical_op
@@ -174,6 +194,10 @@ grammar CFML
 
   rule equal_op
     [eE] [qQ] [uU] [aA] [lL] <Yugo::CFML::EqualOperator>
+  end
+
+  rule equals_op
+    [eE] [qQ] [uU] [aA] [lL] [sS] <Yugo::CFML::EqualOperator>
   end
 
   rule eq_op

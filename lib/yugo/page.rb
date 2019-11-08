@@ -58,6 +58,7 @@ module Yugo
       @url  = _url_variables(env)
       @form = _form_variables(env)
       p @form
+      p @request_path
       res = ::ERB.new(@content).result(binding)
       puts res
       res

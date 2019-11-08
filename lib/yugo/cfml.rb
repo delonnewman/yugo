@@ -2,16 +2,16 @@ require 'treetop'
 
 require_relative 'ruby'
 require_relative 'erb'
+require_relative 'tags'
 
 require_relative 'cfml/node'
 require_relative 'cfml/syntax'
 require_relative 'cfml/content'
 require_relative 'cfml/text'
 require_relative 'cfml/comment'
-require_relative 'cfml/open_tag'
 require_relative 'cfml/attribute'
 require_relative 'cfml/content'
-require_relative 'cfml/end_tag'
+require_relative 'cfml/empty_tag'
 require_relative 'cfml/content_tag'
 require_relative 'cfml/statement'
 require_relative 'cfml/expression'
@@ -60,7 +60,9 @@ module Yugo
     end
 
     def parse(str)
-      Parser.parse(str)
+      res = Parser.parse(str)
+      raise "There was an error parsing the given string: #{str}" if res.nil?
+      res
     end
 
     extend self

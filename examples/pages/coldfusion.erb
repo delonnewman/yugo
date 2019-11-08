@@ -1,0 +1,54 @@
+<html>
+<head>
+  <title>Yugo Console</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<main class="container-fluid row">
+  <div class="col">
+    <form action="coldfusion" method="post">
+      <textarea class="form-control" rows="20" name="expression"><%= form['expression'] %></textarea>
+      <button class="btn btn-primary">Evaluate</button>
+    </form>
+  </div>
+  <div class="col">
+    <% if form['expression'] %>
+      <table class="table">
+        <tr>
+          <th>ColdFusion</th>
+          <td>
+            <code>
+              <%= h form['expression'] %>
+            </code>
+          </td>
+        </tr>
+        <tr>
+          <th>AST</th>
+          <td>
+            <code>
+              <%= h Yugo::CFML.ruby_ast_from_string(form['expression']).inspect %>
+            </code>
+          </td>
+        </tr>
+        <tr>
+          <th>Ruby / ERB</th>
+          <td>
+            <code>
+              <%= h Yugo::CFML.compile_string(form['expression']) %>
+            </code>
+          </td>
+        </tr>
+        <tr>
+          <th>Result</th>
+          <td>
+            <code>
+              <%= h evaluate_string(form['expression']) %>
+            </code>
+          </td>
+        </tr>
+      </table>
+    <% end %>
+  </div>
+</main>
+</body>
+</html>

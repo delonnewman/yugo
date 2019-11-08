@@ -1,16 +1,16 @@
 module Yugo
   module ERB
     class CommentTag < Syntax
-      def initialize(code)
-        @code = code
+      def initialize(text)
+        @text = text
       end
 
       def compile
-        "<%# #{code.compile} %>"
+        "<%# #{@text} %>"
       end
 
       def to_sexp
-        [:erb_comment, @code.to_sexp]
+        [:erb_comment, @text]
       end
     end
   end

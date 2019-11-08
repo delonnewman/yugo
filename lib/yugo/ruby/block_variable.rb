@@ -10,6 +10,10 @@ module Yugo
       def compile
         @name.to_s
       end
+
+      def to_sexp
+        @name.to_sym
+      end
     end
   end
 end

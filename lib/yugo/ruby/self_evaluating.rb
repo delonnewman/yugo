@@ -10,6 +10,10 @@ module Yugo
       def compile
         @value.to_s
       end
+
+      def to_sexp
+        @value
+      end
     end
   end
 end

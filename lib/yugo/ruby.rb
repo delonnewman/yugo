@@ -21,3 +21,8 @@ require_relative 'ruby/method_resolution'
 require_relative 'ruby/binary_operation'
 require_relative 'ruby/operator'
 require_relative 'ruby/program'
+
+require_relative 'ruby/if_clause'
+require_relative 'ruby/elsif_clause'
+require_relative 'ruby/else'
+require_relative 'ruby/end'

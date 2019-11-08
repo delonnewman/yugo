@@ -8,7 +8,11 @@ module Yugo
       end
 
       def compile
-        "@#{@name}"
+        "@#{@name.compile}"
+      end
+
+      def to_sexp
+        [:instance_varaible, @name.to_sexp]
       end
     end
   end

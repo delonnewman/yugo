@@ -11,8 +11,6 @@ require_relative 'cfml/text'
 require_relative 'cfml/comment'
 require_relative 'cfml/attribute'
 require_relative 'cfml/content'
-require_relative 'cfml/empty_tag'
-require_relative 'cfml/content_tag'
 require_relative 'cfml/statement'
 require_relative 'cfml/expression'
 require_relative 'cfml/null'
@@ -27,6 +25,11 @@ require_relative 'cfml/unary_operation'
 require_relative 'cfml/function_application'
 require_relative 'cfml/operators'
 require_relative 'cfml/assignment'
+
+require_relative 'cfml/set_tag'
+require_relative 'cfml/output_tag'
+require_relative 'cfml/if_tag'
+
 require_relative 'cfml/parser'
 
 module Yugo
@@ -63,6 +66,28 @@ module Yugo
       res = Parser.parse(str)
       raise "There was an error parsing the given string: #{str}" if res.nil?
       res
+    end
+
+    def parse_attribute_list(list)
+      init = {}
+      unless list.nil? or list.empty?
+        list.elements[0].elements.reject { |elem| elem.text_value =~ /\A\s+\z/ }.reduce(init) do |h, attr|
+          h.merge!(attr.identifier.ruby_ast => attr.expression.ruby_ast)
+        end
+      end
+      init
+    end
+
+    def elements_empty?(node)
+      node.elements.nil? or node.elements.empty?
+    end
+
+    def elements_present?(node)
+      !elements_empty?(node)
+    end
+
+    def plain_node?(node)
+      node.class == Treetop::Runtime::SyntaxNode
     end
 
     extend self

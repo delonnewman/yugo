@@ -6,7 +6,11 @@ module Yugo
       end
 
       def compile
-        "<% #{code.compile} %>"
+        "<% #{@code.compile} %>"
+      end
+
+      def to_sexp
+        [:erb_statement, @code.to_sexp]
       end
     end
   end

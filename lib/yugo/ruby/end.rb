@@ -1,16 +1,15 @@
 module Yugo
   module Ruby
-    class Operator < Syntax
-      def initialize(op)
-        @op = op
+    class End < Syntax
+      def initialize
       end
 
       def compile
-        @op.to_s
+        'end'
       end
 
       def to_sexp
-        @op
+        :end
       end
     end
   end

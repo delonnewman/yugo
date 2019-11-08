@@ -6,7 +6,7 @@
 <body>
 <main class="container-fluid row">
   <div class="col">
-    <form action="coldfusion" method="post">
+    <form action="console" method="post">
       <textarea class="form-control" rows="20" name="expression"><%= form['expression'] %></textarea>
       <button class="btn btn-primary">Evaluate</button>
     </form>
@@ -15,10 +15,26 @@
     <% if form['expression'] %>
       <table class="table">
         <tr>
-          <th>ColdFusion</th>
+          <th>Ruby / ERB</th>
+          <td>
+            <pre>
+            <code>
+              <%=h Yugo::CFML.compile_string(form['expression']) %>
+            </code>
+            </pre>
+          </td>
+        </tr>
+        <tr>
+          <th>Result</th>
+          <td>
+            <%= evaluate_string(form['expression']) %>
+          </td>
+        </tr>
+        <tr>
+          <th>S-Expression</th>
           <td>
             <code>
-              <%= h form['expression'] %>
+              <%= format(Yugo::CFML.ruby_ast_from_string(form['expression']).to_sexp) %>
             </code>
           </td>
         </tr>
@@ -26,23 +42,7 @@
           <th>AST</th>
           <td>
             <code>
-              <%= h Yugo::CFML.ruby_ast_from_string(form['expression']).inspect %>
-            </code>
-          </td>
-        </tr>
-        <tr>
-          <th>Ruby / ERB</th>
-          <td>
-            <code>
-              <%= h Yugo::CFML.compile_string(form['expression']) %>
-            </code>
-          </td>
-        </tr>
-        <tr>
-          <th>Result</th>
-          <td>
-            <code>
-              <%= h evaluate_string(form['expression']) %>
+              <%=h Yugo::CFML.ruby_ast_from_string(form['expression']).inspect %>
             </code>
           </td>
         </tr>

@@ -9,6 +9,10 @@ module Yugo
       def compile
         @expressions.map(&:compile).join("\n")
       end
+
+      def to_sexp
+        @expressions.map(&:to_sexp)
+      end
     end
   end
 end

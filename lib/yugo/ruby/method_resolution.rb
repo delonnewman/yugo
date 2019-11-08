@@ -16,6 +16,10 @@ module Yugo
           "#{object.compile}.#{method_name.compile}"
         end
       end
+
+      def to_sexp
+        [:method_resolution, @object.to_sexp, @method_name.to_sexp, @arguments.map(&:to_sexp)]
+      end
     end
   end
 end

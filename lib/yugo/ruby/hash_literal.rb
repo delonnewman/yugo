@@ -10,6 +10,10 @@ module Yugo
       def compile
         "{" << @members.map { |(key, value)| "#{key.compile} => #{value.compile}" }.join(', ') << "}"
       end
+
+      def to_sexp
+        [:hash] + @members.map(&:to_sexp)
+      end
     end
   end
 end

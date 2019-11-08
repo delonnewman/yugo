@@ -15,6 +15,10 @@ module Yugo
       def compile
         "(#{@left.compile} #{@op.compile} #{@right.compile})"
       end
+
+      def to_sexp
+        [@op.to_sexp, @left.to_sexp, @right.to_sexp]
+      end
     end
   end
 end

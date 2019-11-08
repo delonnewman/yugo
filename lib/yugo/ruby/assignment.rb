@@ -13,6 +13,10 @@ module Yugo
         @assignee = assignee
         @assigned = assigned
       end
+
+      def to_sexp
+        [:assignment, @assignee.to_sexp, @assigned.to_sexp]
+      end
     end
   end
 end

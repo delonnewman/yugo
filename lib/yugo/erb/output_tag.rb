@@ -8,6 +8,10 @@ module Yugo
       def compile
         "<%= #{@code.compile} %>"
       end
+
+      def to_sexp
+        [:erb_output, @code.to_sexp]
+      end
     end
   end
 end

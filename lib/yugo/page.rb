@@ -68,6 +68,10 @@ module Yugo
       ::ERB.new(Yugo::CFML.compile_string(str)).result(binding)
     end
 
+    def format(object, opts = {})
+      object.ai(opts.merge(html: true))
+    end
+
     private
 
       def _cgi_variables(env)

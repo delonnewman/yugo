@@ -2,39 +2,22 @@
 
 grammar CFML
   rule content
-    (tag / comment / text)* <Yugo::CFML::Content>
+    (tag / comment / char)* <Yugo::CFML::Content>
   end
 
   rule text
     [^<]+
   end
 
-  rule tag
-    output_tag / set_tag
-  end
-
-  rule output_tag
-    '<cfoutput' attribute_list space? '>' space? tag_content space? '</cfoutput>' <Yugo::CFML::ContentTag>
-  end
-
   rule char
     .
   end
 
-  rule tag_content
-    (quote / comment / text / space)* <Yugo::CFML::Content>
-  end
+  # Tags
+  # ====
 
-  rule set_tag
-    '<cfset' space? statement? space? '>' <Yugo::CFML::EmptyTag>
-  end
-
-  rule quote
-    '#' expression '#' <Yugo::CFML::Quote>
-  end
-
-  rule tag_text
-    [^<]+
+  rule tag
+    output_tag / set_tag / if_tag
   end
 
   rule attribute
@@ -45,20 +28,81 @@ grammar CFML
     (space (attribute))*
   end
 
+  # <cfoutput>
+  # ----------
+
+  rule output_tag
+    open_output_tag space? output_tag_content space? end_output_tag <Yugo::CFML::OutputTag>
+  end
+
+  rule open_output_tag
+    '<' [cC] [fF] [oO] [uU] [tT] [pP] [uU] [tT] attribute_list space? '>'
+  end
+
+  rule end_output_tag
+    '</' [cC] [fF] [oO] [uU] [tT] [pP] [uU] [tT] '>'
+  end
+
+  rule output_tag_content
+    (!end_output_tag (quote / comment / char))* <Yugo::CFML::Content>
+  end
+
+  # <cfset>
+  # -------
+
+  rule set_tag
+    '<' [cC] [fF] [sS] [eE] [tT] space statement space? '>' <Yugo::CFML::SetTag>
+  end
+
+  # <cfif>
+  # ------
+
+  rule if_tag
+    open_if_tag if_tag_content? (elseif_tag if_tag_content?)? (else_tag if_tag_content?)? end_if_tag <Yugo::CFML::IfTag>
+  end
+
+  rule open_if_tag
+    '<' [cC] [fF] [iI] [fF] space expression space? '>'
+  end
+
+  rule if_tag_content
+    (!end_if_tag !elseif_tag !else_tag (tag / comment / char))* <Yugo::CFML::Content>
+  end
+
+  rule elseif_tag
+    '<' [cC] [fF] [eE] [lL] [sS] [eE] [iI] [fF] space expression space? '>'
+  end
+
+  rule else_tag
+    '<' [cC] [fF] [eE] [lL] [sS] [eE] '>'
+  end
+
+  rule end_if_tag
+    '</' [cC] [fF] [iI] [fF] '>'
+  end
+
+  rule quote
+    '#' expression '#' <Yugo::CFML::Quote>
+  end
+
+  rule tag_text
+    [^<]+
+  end
+
   rule open_tag
     open_attribute_tag / open_statement_tag
   end
 
   rule open_attribute_tag
-    '<' identifier attribute_list space? '>' <Yugo::CFML::OpenTag>
+    '<' identifier attribute_list space? '>'
   end
 
   rule open_statement_tag
-    '<' identifier space statement space? '>' <Yugo::CFML::OpenTag>
+    '<' identifier space statement space? '>'
   end
 
   rule end_tag
-    '</' identifier space? '>' <Yugo::CFML::EndTag>
+    '</' identifier space? '>'
   end
 
   rule comment
@@ -84,7 +128,11 @@ grammar CFML
   end
 
   rule assignment
-    ('var' space)? identifier space? '=' space? expression
+    (assignment_scope space)? identifier space? '=' space? expression <Yugo::CFML::Assignment>
+  end
+
+  rule assignment_scope
+    'var'
   end
 
   # Expressions

@@ -8,6 +8,10 @@ module Yugo
       def compile
         @text
       end
+
+      def to_sexp
+        @text
+      end
     end
   end
 end

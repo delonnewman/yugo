@@ -17,6 +17,10 @@ module Yugo
         @arguments = arguments
         @body = body
       end
+
+      def to_sexp
+        [:method, @name.to_sexp, @arguments.map(&:to_sexp)] + @body.map(&:to_sexp)
+      end
     end
   end
 end

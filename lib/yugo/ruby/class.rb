@@ -21,6 +21,10 @@ module Yugo
         @methods = methods
         @parent = parent
       end
+
+      def to_sexp
+        [:class, @name.to_sexp] + methods.map(&:to_sexp)
+      end
     end
   end
 end

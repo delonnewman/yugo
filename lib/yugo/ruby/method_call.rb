@@ -12,6 +12,10 @@ module Yugo
         @identifier = identifier
         @arguments = arguments
       end
+
+      def to_sexp
+        [@identifier.to_sexp] + @arguments.map(&:to_sexp)
+      end
     end
   end
 end

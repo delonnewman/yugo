@@ -1,9 +1,11 @@
 require 'treetop'
+require 'erb'
 
 require_relative 'ruby'
 require_relative 'erb'
 require_relative 'tags'
 
+require_relative 'cfml/variable_scope'
 require_relative 'cfml/node'
 require_relative 'cfml/syntax'
 require_relative 'cfml/content'
@@ -34,32 +36,32 @@ require_relative 'cfml/parser'
 
 module Yugo
   module CFML
-    def ruby_ast(node)
+    def ruby_ast(node, scope = VariableScope.new)
       if node.respond_to?(:ruby_ast)
-        node.ruby_ast
+        node.ruby_ast(scope)
       else
         Yugo::ERB::Text.new(node.text_value)
       end
     end
 
-    def ruby_ast_from_string(str)
-      ruby_ast(parse(str))
+    def ruby_ast_from_string(str, scope = VariableScope.new)
+      ruby_ast(parse(str), scope)
     end
 
-    def compile(node)
-      ruby_ast(node).compile
+    def compile(node, scope = VariableScope.new)
+      ruby_ast(node, scope).compile
     end
 
-    def compile_string(str)
-      compile(parse(str))
+    def compile_string(str, scope = VariableScope.new)
+      compile(parse(str), scope)
     end
 
-    def evaluate(node, env = binding)
-      ::ERB.new(ruby_ast(node).compile).result(env)
+    def evaluate(node, env = binding, scope = VariableScope.new)
+      ::ERB.new(ruby_ast(node, scope).compile).result(env)
     end
 
-    def evaluate_string(str, env = binding)
-      evaluate(parse(str), env)
+    def evaluate_string(str, env = binding, scope = VariableScope.new)
+      evaluate(parse(str), env, scope)
     end
 
     def parse(str)

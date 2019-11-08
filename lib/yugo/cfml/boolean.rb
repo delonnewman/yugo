@@ -1,7 +1,7 @@
 module Yugo
   module CFML
     class Boolean < Node
-      def ruby_ast
+      def ruby_ast(_scope)
         case text_value.downcase
         when 'true'
           Yugo::Ruby::True.new

@@ -1,6 +1,7 @@
 require_relative 'list'
 require_relative 'struct'
 require_relative 'cfml'
+require_relative 'database'
 
 module Yugo
   class TypeError < Exception; end

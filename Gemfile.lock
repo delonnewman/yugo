@@ -23,6 +23,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.0)
+    sequel (5.26.0)
+    sqlite3 (1.4.1)
     treetop (1.6.10)
       polyglot (~> 0.3)
 
@@ -34,6 +36,8 @@ DEPENDENCIES
   el!
   rack
   rspec
+  sequel
+  sqlite3
   treetop
 
 BUNDLED WITH

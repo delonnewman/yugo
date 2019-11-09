@@ -40,7 +40,7 @@ grammar CFML
   end
 
   rule end_output_tag
-    '</' [cC] [fF] [oO] [uU] [tT] [pP] [uU] [tT] '>'
+    '</' [cC] [fF] [oO] [uU] [tT] [pP] [uU] [tT] space? '>'
   end
 
   rule output_tag_content

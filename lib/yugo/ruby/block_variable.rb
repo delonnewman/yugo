@@ -8,11 +8,11 @@ module Yugo
       end
 
       def compile
-        @name.to_s
+        @name.compile
       end
 
       def to_sexp
-        @name.to_sym
+        @name.to_sexp
       end
     end
   end

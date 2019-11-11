@@ -1,19 +1,19 @@
 require_relative 'list'
 require_relative 'struct'
-require_relative 'cfml'
 require_relative 'database'
 
 module Yugo
   class TypeError < Exception; end
 
   module Runtime
-    def dump(value)
-      if value.respond_to?(:dump)
-        value.dump
+    def dump(var, opts = {})
+      if var.respond_to?(:yugo_dump)
+        var.yugo_dump(opts)
       else
-        value.inspect
+        var.inspect
       end
     end
+    alias writeDump dump
 
     def h(str)
       CGI.escape_html(str)

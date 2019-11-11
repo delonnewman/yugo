@@ -209,7 +209,7 @@ grammar CFML
   # Operator sets
 
   rule equality_op
-    eqv_op / is_op / equal_op / equals_op / eq_op / isnot_op / notequal_op / neq_op
+    eqv_op / isnot_op / is_op / equal_op / equals_op / eq_op / notequal_op / neq_op
   end
 
   rule arithmetical_op

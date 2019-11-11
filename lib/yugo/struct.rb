@@ -13,10 +13,12 @@ module Yugo
       end
     end
 
-    def dump
+    def yugo_dump(opts = {})
+      label = opts.fetch(:label, 'struct')
+
       struct = self
       tag.table.table do
-        caption(style: 'caption-side:top') { "struct" } <<
+        caption(style: 'caption-side:top') { label } <<
         tbody do
           if struct.empty?
             tr td("empty")

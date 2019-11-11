@@ -1,6 +1,8 @@
 require 'treetop'
 require 'erb'
 
+require_relative 'runtime'
+
 require_relative 'ruby'
 require_relative 'erb'
 require_relative 'tags'

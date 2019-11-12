@@ -1,2 +1,2 @@
 <cfset x = 1>
-#x#
+<cfoutput>#x + 5# = x + 5</cfoutput>

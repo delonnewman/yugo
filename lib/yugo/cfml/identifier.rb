@@ -1,7 +1,8 @@
 module Yugo
   module CFML
     class Identifier < Node
-      SPECIAL_IDENTIFIERS = (%w[server cgi form uri varibles].to_set + Yugo::Runtime.instance_methods(false).map(&:to_s).to_set).freeze
+      SPECIAL_IDENTIFIERS = (%w[server cgi form uri varibles evaluate].to_set +
+                             Yugo::Runtime.instance_methods(false).map(&:to_s).to_set).freeze
 
       def ruby_ast(scope)
         name = text_value.downcase

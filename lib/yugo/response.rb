@@ -21,23 +21,14 @@ module Yugo
       @site    = site
       @env     = env
       @page    = site.pages[env['REQUEST_PATH']]
-      @headers = {'Content-Type' => 'text/html'}
+      @headers = {'Content-Type' => @page.content_type}
     end
 
     def render
       if page.nil?
         ['404', headers, [Page.new(site, env['REQUEST_PATH'], HTTP_404).render(env)]]
       else
-        begin
-          ['200', headers, [page.call.render(env)]]
-        rescue => e
-          # TODO: add logger
-          $stderr.puts "#{Time.now} ERROR: #{e.message}"
-          e.backtrace.each do |trace|
-            $stderr.puts "\t#{trace}"
-          end
-          ['500', headers, HTTP_505]
-        end
+        ['200', headers, [page.render(env)]]
       end
     end
   end

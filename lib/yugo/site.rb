@@ -16,8 +16,9 @@ module Yugo
       @server = Yugo::Struct.new
       @pages_path = File.join(Dir.pwd, config.fetch(:pages_path, DEFAULT_PAGES_PATH))
       @pages = Dir["#{@pages_path}/**/*"].entries.reduce({}) do |h, file|
-        path = file.gsub(@pages_path, '').gsub(File.extname(file), '')
-        h.merge(path => lambda { Page.new(self, path, IO.read(file)) })
+        ext = File.extname(file)
+        path = file.gsub(@pages_path, '').gsub(ext, '')
+        h.merge(path => Page.new(self, path, File.new(file, 'r'), ext.tr('.', '').to_sym))
       end
     end
 

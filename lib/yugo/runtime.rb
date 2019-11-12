@@ -13,7 +13,7 @@ module Yugo
         var.inspect
       end
     end
-    alias writeDump dump
+    alias writedump dump
 
     def h(str)
       CGI.escape_html(str)

@@ -2,6 +2,19 @@ module Yugo
   class Page
     include Runtime
 
+    CONTENT_TYPES = {
+      erb:  'text/html',
+      cfm:  'text/html',
+      html: 'text/html',
+      htm:  'text/html',
+      png:  'image/png',
+      jpg:  'image/jpeg',
+      jpeg: 'image/jpeg',
+      gif:  'image/gif',
+      pdf:  'application/pdf',
+      csv:  'text/csv'
+    }.freeze
+
     CGI_VARIABLES = {
       'SERVER_SOFTWARE'   => 'SERVER_SOFTWARE',
       'SERVER_NAME'       => 'SERVER_NAME',
@@ -23,7 +36,7 @@ module Yugo
       'CONTENT_LENGTH'    => 'CONTENT_LENGTH'
     }
 
-    attr_reader :site, :request_path, :file_path
+    attr_reader :site, :request_path, :content, :content_type, :file_type, :logger
 
     # 'Variables' scope, the default scope of 'cfset' for 'page' scoped variables
     attr_reader :variables
@@ -40,16 +53,23 @@ module Yugo
     # 'form' scope
     attr_reader :form
 
-    def initialize(site, request_path, content)
+    def initialize(site, request_path, io, file_type)
       @site = site
       @request_path = request_path
-      @content = content
+      @io = io
       @variables = Yugo::Struct.new
       @server = @site.server
+      @logger = Logger.new(STDERR)
+      @file_type = file_type
+      @content_type = CONTENT_TYPES.fetch(@file_type, 'text/plain')
     end
 
     def defined?(var_name)
       not @variables[var_name].nil?
+    end
+
+    def content
+      @content ||= @io.read
     end
 
     def render(env)
@@ -57,14 +77,17 @@ module Yugo
       @cgi  = _cgi_variables(env)
       @url  = _url_variables(env)
       @form = _form_variables(env)
-      p @form
-      p @request_path
-      res = ::ERB.new(@content).result(binding)
-      puts res
-      res
+      case file_type
+      when :erb
+        ::ERB.new(content).result(binding)
+      when :cfm, :cfc
+        evaluate(content)
+      else
+        content
+      end
     end
 
-    def evaluate_string(str)
+    def evaluate(str)
       ::ERB.new(Yugo::CFML.compile_string(str)).result(binding)
     end
 
@@ -89,7 +112,6 @@ module Yugo
       end
 
       def _parse_uri_encoded_content(content)
-        puts "CONTENT: #{content.inspect}"
         pairs = content.split('&').map { |x| x.split('=') }.map do |(key, value)|
           [_uri_decode(key), _uri_decode(value)]
         end

@@ -2,6 +2,7 @@ require 'el'
 require 'erb'
 require 'uri'
 require 'cgi'
+require 'logger'
 
 require_relative 'yugo/runtime'
 require_relative 'yugo/cfml'

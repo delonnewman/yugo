@@ -33,6 +33,7 @@ require_relative 'cfml/assignment'
 require_relative 'cfml/set_tag'
 require_relative 'cfml/output_tag'
 require_relative 'cfml/if_tag'
+require_relative 'cfml/script_tag'
 
 require_relative 'cfml/parser'
 

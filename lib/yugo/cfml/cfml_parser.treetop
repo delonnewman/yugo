@@ -17,7 +17,7 @@ grammar CFML
   # ====
 
   rule tag
-    output_tag / set_tag / if_tag / query_tag
+    output_tag / set_tag / if_tag / query_tag / script_tag
   end
 
   rule attribute
@@ -79,6 +79,25 @@ grammar CFML
 
   rule end_if_tag
     '</' [cC] [fF] [iI] [fF] '>'
+  end
+
+  # <cfscript>
+  # ----------
+
+  rule script_tag
+    open_script_tag space? script_tag_content space? end_script_tag <Yugo::CFML::ScriptTag>
+  end
+
+  rule script_tag_content
+    (!end_script_tag statement)* <Yugo::CFML::Content>
+  end
+
+  rule open_script_tag
+    '<' [cC] [fF] [sS] [cC] [rR] [iI] [pP] [tT] space? '>'
+  end
+
+  rule end_script_tag
+    '</' [cC] [fF] [sS] [cC] [rR] [iI] [pP] [tT] space? '>'
   end
 
   # <cfquery>

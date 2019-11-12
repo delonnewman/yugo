@@ -6,6 +6,12 @@ module Yugo
       end
     end
 
+    class NotOperator < Node
+      def ruby_ast(_scope)
+        Yugo::Ruby::Operator.new(:!)
+      end
+    end
+
     class AdditionOperator < Operator
       def ruby_ast(_scope)
         Yugo::Ruby::Operator.new(:+)

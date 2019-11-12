@@ -1,4 +1,6 @@
-require 'el'
+require 'bundler/setup'
+Bundler.require
+
 require 'erb'
 require 'uri'
 require 'cgi'

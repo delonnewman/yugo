@@ -176,7 +176,7 @@ grammar CFML
   # Expressions
 
   rule expression
-    space? (function_application / binary_operation / array_literal) <Yugo::CFML::Expression>
+    space? (function_application / prefix_operation / binary_operation / array_literal) <Yugo::CFML::Expression>
   end
 
   rule array_literal
@@ -212,7 +212,7 @@ grammar CFML
   end
 
   rule primary
-    function_application / null / boolean / identifier / float / integer / string
+    function_application / array_literal / null / boolean / identifier / float / integer / string
     /
     paren_start space? expression space? paren_end
   end
@@ -232,7 +232,7 @@ grammar CFML
   end
 
   rule arithmetical_op
-    mult_op / div_op / add_op / sub_op / exp_op / mod_op
+    mult_op / div_op / add_op / sub_op / exp_op / mod_op / percent_mod_op
   end
 
   rule comparative_op
@@ -244,7 +244,23 @@ grammar CFML
     and_op / xor_op / or_op / imp_op
   end
 
+  rule prefix_operation
+    prefix_unary_op expression <Yugo::CFML::PrefixOperation>
+  end
+
+  rule prefix_unary_op
+    not_op / bang_not_op
+  end
+
   # Operators
+
+  rule not_op
+    [nN] [oO] [tT] space <Yugo::CFML::NotOperator>
+  end
+
+  rule bang_not_op
+    '!' <Yugo::CFML::NotOperator>
+  end
 
   rule add_op
     '+' <Yugo::CFML::AdditionOperator>
@@ -272,6 +288,10 @@ grammar CFML
 
   rule mod_op
     [mM] [oO] [dD] <Yugo::CFML::ModulusOperator>
+  end
+
+  rule percent_mod_op
+    '%' <Yugo::CFML::ModulusOperator>
   end
 
   rule is_op
@@ -387,9 +407,17 @@ grammar CFML
   end
 
   rule string
+    double_quote_string / single_quote_string
+  end
+
+  rule double_quote_string
     '"' ([^"\\] / "\\" . )* '"' <Yugo::CFML::String>
   end
   
+  rule single_quote_string
+    "'" ([^'\\] / "\\" . )* "'" <Yugo::CFML::String>
+  end
+
   rule identifier
     [a-zA-Z_] [a-zA-Z0-9_]* <Yugo::CFML::Identifier>
   end

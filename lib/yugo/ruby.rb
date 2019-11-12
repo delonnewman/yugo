@@ -19,6 +19,7 @@ require_relative 'ruby/class'
 require_relative 'ruby/method_call'
 require_relative 'ruby/method_resolution'
 require_relative 'ruby/binary_operation'
+require_relative 'ruby/unary_operation'
 require_relative 'ruby/operator'
 require_relative 'ruby/program'
 

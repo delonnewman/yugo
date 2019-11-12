@@ -25,7 +25,7 @@ require_relative 'cfml/string'
 require_relative 'cfml/quote'
 require_relative 'cfml/identifier'
 require_relative 'cfml/binary_operation'
-require_relative 'cfml/unary_operation'
+require_relative 'cfml/prefix_operation'
 require_relative 'cfml/function_application'
 require_relative 'cfml/operators'
 require_relative 'cfml/assignment'
@@ -39,11 +39,23 @@ require_relative 'cfml/parser'
 
 module Yugo
   module CFML
+    def logger
+      @logger ||= Logger.new(STDERR)
+    end
+
     def ruby_ast(node, scope = VariableScope.new)
       if node.respond_to?(:ruby_ast)
         node.ruby_ast(scope)
       else
         Yugo::ERB::Text.new(node.text_value)
+      end
+    end
+
+    def to_sexp(node)
+      if node.respond_to?(:to_sexp)
+        node.to_sexp
+      else
+        [:node, node.text_value]
       end
     end
 
@@ -59,6 +71,10 @@ module Yugo
       compile(parse(str), scope)
     end
 
+    def compile_file(file, scope = VariableScope.new)
+      compile(parse_file(file), scope)
+    end
+
     def evaluate(node, env = binding, scope = VariableScope.new)
       ::ERB.new(ruby_ast(node, scope).compile).result(env)
     end
@@ -68,9 +84,14 @@ module Yugo
     end
 
     def parse(str)
+      logger.info "Parsing: #{str.inspect}"
       res = Parser.parse(str)
       raise "There was an error parsing the given string: #{str}" if res.nil?
       res
+    end
+
+    def parse_file(file)
+      parse(IO.read(file))
     end
 
     def parse_attribute_list(list)

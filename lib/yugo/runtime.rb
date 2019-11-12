@@ -19,6 +19,10 @@ module Yugo
       CGI.escape_html(str)
     end
 
+    def isdefined(var)
+      raise "Not implemented"
+    end
+
     # Math functions
 
     def pi

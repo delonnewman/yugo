@@ -24,6 +24,7 @@ require_relative 'cfml/float'
 require_relative 'cfml/string'
 require_relative 'cfml/quote'
 require_relative 'cfml/identifier'
+require_relative 'cfml/property_access'
 require_relative 'cfml/binary_operation'
 require_relative 'cfml/prefix_operation'
 require_relative 'cfml/function_application'
@@ -43,7 +44,9 @@ module Yugo
       @logger ||= Logger.new(STDERR)
     end
 
-    def ruby_ast(node, scope = VariableScope.new)
+    TOPLEVEL = VariableScope.new
+
+    def ruby_ast(node, scope = TOPLEVEL)
       if node.respond_to?(:ruby_ast)
         node.ruby_ast(scope)
       else
@@ -59,27 +62,27 @@ module Yugo
       end
     end
 
-    def ruby_ast_from_string(str, scope = VariableScope.new)
+    def ruby_ast_from_string(str, scope = TOPLEVEL)
       ruby_ast(parse(str), scope)
     end
 
-    def compile(node, scope = VariableScope.new)
+    def compile(node, scope = TOPLEVEL)
       ruby_ast(node, scope).compile
     end
 
-    def compile_string(str, scope = VariableScope.new)
+    def compile_string(str, scope = TOPLEVEL)
       compile(parse(str), scope)
     end
 
-    def compile_file(file, scope = VariableScope.new)
+    def compile_file(file, scope = TOPLEVEL)
       compile(parse_file(file), scope)
     end
 
-    def evaluate(node, env = binding, scope = VariableScope.new)
+    def evaluate(node, env = binding, scope = TOPLEVEL)
       ::ERB.new(ruby_ast(node, scope).compile).result(env)
     end
 
-    def evaluate_string(str, env = binding, scope = VariableScope.new)
+    def evaluate_string(str, env = binding, scope = TOPLEVEL)
       evaluate(parse(str), env, scope)
     end
 
@@ -94,14 +97,17 @@ module Yugo
       parse(IO.read(file))
     end
 
-    def parse_attribute_list(list)
-      init = {}
-      unless list.nil? or list.empty?
-        list.elements[0].elements.reject { |elem| elem.text_value =~ /\A\s+\z/ }.reduce(init) do |h, attr|
-          h.merge!(attr.identifier.ruby_ast => attr.expression.ruby_ast)
+    # TODO: add key/value arguments
+    def function_arguments(node, scope)
+      node.function_arguments.elements.flat_map do |elem|
+        if elem.respond_to?(:ruby_ast)
+          elem.ruby_ast(scope)
+        elsif !elem.elements.nil? and !elem.elements.empty?
+          elem.elements.map { |e| e.expression.ruby_ast(scope) }
+        else
+          []
         end
       end
-      init
     end
 
     def elements_empty?(node)

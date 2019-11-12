@@ -166,7 +166,11 @@ grammar CFML
   end
 
   rule assignment
-    (assignment_scope space)? identifier space? '=' space? expression <Yugo::CFML::Assignment>
+    (assignment_scope space)? assignee space? '=' space? expression <Yugo::CFML::Assignment>
+  end
+
+  rule assignee
+    property_access / identifier
   end
 
   rule assignment_scope
@@ -212,9 +216,16 @@ grammar CFML
   end
 
   rule primary
-    function_application / array_literal / null / boolean / identifier / float / integer / string
+    function_application / array_literal / property_access
+    /
+    null / boolean / identifier / float / integer / string
     /
     paren_start space? expression space? paren_end
+    {
+      def ruby_ast(scope)
+        expression.ruby_ast(scope)   
+      end
+    }
   end
 
   rule paren_start
@@ -396,6 +407,28 @@ grammar CFML
     '(' space? ')' /  '(' space? expression space? ')' / '(' space? expression space? (',' expression)+ ')'
   end
 
+  # Structs
+
+  rule property_access
+    interned_property_access / uninterned_property_access
+  end
+
+  rule interned_property_access
+    identifier '.' function_application <Yugo::CFML::PropertyAccess>
+    /
+    identifier '.' property_access <Yugo::CFML::PropertyAccess>
+    /
+    identifier '.' identifier <Yugo::CFML::PropertyAccess>
+  end
+
+  rule uninterned_property_access
+    identifier circumfix_property_access+ <Yugo::CFML::PropertyAccess>
+  end
+
+  rule circumfix_property_access
+    '[' expression ']'
+  end
+
   # Literals
 
   rule integer
@@ -411,11 +444,11 @@ grammar CFML
   end
 
   rule double_quote_string
-    '"' ([^"\\] / "\\" . )* '"' <Yugo::CFML::String>
+    '"' ('""' / '##' / quote / [^"])* '"' <Yugo::CFML::String>
   end
   
   rule single_quote_string
-    "'" ([^'\\] / "\\" . )* "'" <Yugo::CFML::String>
+    "'" ("''" / '##' / quote / [^'])* "'" <Yugo::CFML::String>
   end
 
   rule identifier

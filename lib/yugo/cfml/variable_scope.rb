@@ -1,9 +1,9 @@
 module Yugo
   module CFML
     class VariableScope
-      def initialize(parent = nil)
+      def initialize(parent = nil, variables = Set.new)
         @parent = nil
-        @variables = Set.new
+        @variables = variables.to_set
       end
 
       def top_level?

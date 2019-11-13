@@ -1,11 +1,11 @@
 module Yugo
   module Ruby
-    class MethodCall < Syntax
+    class Macro < Syntax
       TEMPLATE = <<-RUBY
         <% if arguments.empty? %>
           <%= identifier.compile %>
         <% else %>
-          <%= identifier.compile %>(<%= arguments.map(&:compile).join(', ') %>)
+          <%= identifier.compile %> <%= arguments.map(&:compile).join(', ') %>
         <% end %>
       RUBY
 
@@ -21,11 +21,7 @@ module Yugo
       end
 
       def to_sexp
-        if @arguments.empty?
-          [@idenfitifer.to_sexp]
-        else
-          [@identifier.to_sexp] + @arguments.map(&:to_sexp)
-        end
+        [@identifier.to_sexp] + @arguments.map(&:to_sexp)
       end
     end
   end

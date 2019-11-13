@@ -35,6 +35,7 @@ require_relative 'cfml/set_tag'
 require_relative 'cfml/output_tag'
 require_relative 'cfml/if_tag'
 require_relative 'cfml/script_tag'
+require_relative 'cfml/include_tag'
 
 require_relative 'cfml/parser'
 
@@ -95,6 +96,16 @@ module Yugo
 
     def parse_file(file)
       parse(IO.read(file))
+    end
+
+    def parse_attribute_list(list, scope)
+      init = {}
+      unless list.nil? or list.empty?
+        list.elements[0].elements.reject { |elem| elem.text_value =~ /\A\s+\z/ }.reduce(init) do |h, attr|
+          h.merge!(attr.identifier.to_sym => attr.expression.ruby_ast(scope))
+        end
+      end
+      init
     end
 
     # TODO: add key/value arguments

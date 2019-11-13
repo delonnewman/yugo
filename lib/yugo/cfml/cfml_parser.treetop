@@ -17,7 +17,7 @@ grammar CFML
   # ====
 
   rule tag
-    output_tag / set_tag / if_tag / query_tag / script_tag
+    output_tag / set_tag / if_tag / query_tag / script_tag / include_tag
   end
 
   rule attribute
@@ -117,6 +117,20 @@ grammar CFML
 
   rule end_query_tag
     '</' [cC] [fF] [qQ] [uU] [eE] [rR] [yY] '>'
+  end
+
+  # <cfinclude>
+  # -----------
+
+  rule include_tag
+    '<' [cC] [fF] [iI] [nN] [cC] [lL] [uU] [dD] [eE] attribute_list space? '>' <Yugo::CFML::IncludeTag>
+  end
+
+  # <cfparam>
+  # -----------
+
+  rule param_tag
+    '<' [cC] [fF] [pP] [aA] [rR] [aA] [mM] attribute_list space? '>' <Yugo::CFML::ParamTag>
   end
 
   rule quote

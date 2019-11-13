@@ -5,6 +5,7 @@ module Yugo
     CONTENT_TYPES = {
       erb:  'text/html',
       cfm:  'text/html',
+      cfml: 'text/html',
       html: 'text/html',
       htm:  'text/html',
       png:  'image/png',
@@ -36,7 +37,7 @@ module Yugo
       'CONTENT_LENGTH'    => 'CONTENT_LENGTH'
     }
 
-    attr_reader :site, :request_path, :content, :content_type, :file_type, :logger
+    attr_reader :site, :path, :content_type, :file_type, :logger
 
     # 'Variables' scope, the default scope of 'cfset' for 'page' scoped variables
     attr_reader :variables
@@ -53,38 +54,41 @@ module Yugo
     # 'form' scope
     attr_reader :form
 
-    def initialize(site, request_path, io, file_type)
+    def initialize(site, path)
       @site = site
-      @request_path = request_path
-      @io = io
+      @path = path
       @variables = Yugo::Struct.new
       @server = @site.server
       @logger = Logger.new(STDERR)
-      @file_type = file_type
+      @file_type = File.extname(path).tr('.', '').to_sym
       @content_type = CONTENT_TYPES.fetch(@file_type, 'text/plain')
     end
 
-    def defined?(var_name)
-      not @variables[var_name].nil?
-    end
-
+    # TODO: add caching with site configuration
     def content
-      @content ||= @io.read
+      IO.read(path)
     end
 
     def render(env)
       # populate cgi, url, and form scopes
+      @env  = env
       @cgi  = _cgi_variables(env)
       @url  = _url_variables(env)
       @form = _form_variables(env)
       case file_type
       when :erb
         ::ERB.new(content).result(binding)
-      when :cfm, :cfc
+      when :cfm, :cfml, :cfc
         evaluate(content)
       else
         content
       end
+    end
+
+    def include(file)
+      logger.info "including: #{file.inspect}"
+      raise "include can only be called from within a page template" if @env.nil?
+      Page.new(site, File.join(File.dirname(path), file)).render(@env)
     end
 
     def evaluate(str)

@@ -143,7 +143,7 @@ module Yugo
 
       def _parse_uri_encoded_content(content)
         pairs = content.split('&').map { |x| x.split('=') }.map do |(key, value)|
-          [_uri_decode(key), _uri_decode(value)]
+          [_uri_decode(key).to_sym, _uri_decode(value)]
         end
         Yugo::Struct[pairs]
       end

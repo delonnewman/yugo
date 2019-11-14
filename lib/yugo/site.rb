@@ -3,8 +3,8 @@ module Yugo
     DEFAULT_PAGES_PATH = '/pages'.freeze
 
     REQUEST_PATH = 'REQUEST_PATH'.freeze
-    ERB          = 'erb'.freeze
     CONTENT_TYPE = 'Content-Type'.freeze
+    ERB          = 'erb'.freeze
 
     HTTP_404 = <<-HTML.freeze
       <html>

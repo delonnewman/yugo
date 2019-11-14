@@ -3,17 +3,18 @@ module Yugo
     class MethodResolution < Syntax
       attr_reader :object, :method_name, :arguments
 
-      def initialize(object, method_name, arguments = nil)
+      Contract Syntax, Identifier, C::ArrayOf[Syntax] => C::Any
+      def initialize(object, method_name, arguments = [])
         @object = object
         @method_name = method_name
         @arguments = arguments
       end
 
       def compile
-        if arguments
-          "#{object.compile}.#{method_name.compile}(#{arguments.map(&:compile).join(', ')})"
-        else
+        if arguments.empty?
           "#{object.compile}.#{method_name.compile}"
+        else
+          "#{object.compile}.#{method_name.compile}(#{arguments.map(&:compile).join(', ')})"
         end
       end
 

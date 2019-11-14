@@ -13,6 +13,14 @@ module Yugo
       end
     end
 
+    def [](key)
+      super(key.to_sym)
+    end
+
+    def []=(key, value)
+      super(key.to_sym, value)
+    end
+
     def yugo_dump(opts = {})
       label = opts.fetch(:label, 'struct')
 

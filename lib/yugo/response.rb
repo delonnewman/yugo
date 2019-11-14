@@ -18,15 +18,19 @@ module Yugo
     HTML
 
     def initialize(site, env)
-      @site    = site
-      @env     = env
-      @page    = site.pages[env['REQUEST_PATH']]
-      @headers = {'Content-Type' => @page.content_type}
+      @site = site
+      @env  = env
+      @page = site.pages[env['REQUEST_PATH']]
+    end
+
+    def header(page)
+      {'Content-Type' => page.content_type}
     end
 
     def render
       if page.nil?
-        ['404', headers, [Page.new(site, env['REQUEST_PATH'], HTTP_404).render(env)]]
+        page = Page.new(site, StringIO.new(HTTP_404)).render(env)
+        ['404', headers, [page.render(env)]]
       else
         ['200', headers, [page.render(env)]]
       end

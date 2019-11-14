@@ -1,2 +1,2 @@
-require_relative '../lib/yugo'
-run Yugo::Site.new
+require_relative 'config/site'
+run Site.rack_app

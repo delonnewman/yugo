@@ -3,7 +3,6 @@ Bundler.require
 
 require 'erb'
 require 'uri'
-require 'cgi'
 require 'logger'
 
 require_relative 'yugo/runtime'

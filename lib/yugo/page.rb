@@ -54,19 +54,45 @@ module Yugo
     # 'form' scope
     attr_reader :form
 
-    def initialize(site, path)
+    def initialize(site, path, content_type: nil, file_type: nil)
       @site = site
       @path = path
+      @content_type = content_type
+      @file_type = file_type
       @variables = Yugo::Struct.new
       @server = @site.server
       @logger = Logger.new(STDERR)
-      @file_type = File.extname(path).tr('.', '').to_sym
-      @content_type = CONTENT_TYPES.fetch(@file_type, 'text/plain')
     end
 
     # TODO: add caching with site configuration
     def content
-      IO.read(path)
+      return @content if site.cache_pages? && @content
+
+      @content = if file?
+                   IO.read(path)
+                 elsif io?
+                   path.read
+                 else
+                   path
+                 end
+    end
+
+    def file?
+      path.is_a?(String) && File.exists?(path)
+    end
+
+    def io?
+      path.respond_to?(:read)
+    end
+
+    def file_type
+      @file_type ||= if file?
+                       File.extname(path).tr('.', '').to_sym
+                     end
+    end
+
+    def content_type
+      @content_type ||= CONTENT_TYPES.fetch(file_type, 'text/plain')
     end
 
     def render(env)

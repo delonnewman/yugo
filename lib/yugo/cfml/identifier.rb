@@ -5,11 +5,11 @@ module Yugo
 
       def ruby_ast(scope)
         if scope.nil?
-          Yugo::Ruby::Identifier.new(name)
+          Yugo::Ruby::Identifier.new(symbol)
         elsif scope.variable_exists?(name) and scope.top_level?
-          Yugo::Ruby::InstanceVariable.new(Yugo::Ruby::Identifier.new(name))
-        elsif scope.variable_exists?(name) or SPECIAL_IDENTIFIERS.include?(to_sym)
-          Yugo::Ruby::BlockVariable.new(Yugo::Ruby::Identifier.new(name))
+          Yugo::Ruby::InstanceVariable.new(Yugo::Ruby::Identifier.new(symbol))
+        elsif scope.variable_exists?(name) or SPECIAL_IDENTIFIERS.include?(symbol)
+          Yugo::Ruby::BlockVariable.new(Yugo::Ruby::Identifier.new(symbol))
         else
           Yugo::CFML.logger.info "#{inspect}"
           raise "Variable #{text_value} is undefined."
@@ -23,6 +23,7 @@ module Yugo
       def to_sym
         @sym ||= name.to_sym
       end
+      alias symbol to_sym
     end
   end
 end

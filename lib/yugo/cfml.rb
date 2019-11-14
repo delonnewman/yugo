@@ -1,5 +1,5 @@
-require 'treetop'
 require 'erb'
+require 'treetop'
 
 require_relative 'runtime'
 

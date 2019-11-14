@@ -6,6 +6,8 @@ module Yugo
   class TypeError < Exception; end
 
   module Runtime
+    include Rack::Utils
+
     def dump(var, opts = {})
       if var.respond_to?(:yugo_dump)
         var.yugo_dump(opts)
@@ -16,7 +18,7 @@ module Yugo
     alias writedump dump
 
     def h(str)
-      CGI.escape_html(str)
+      escape_html(str)
     end
 
     def isdefined(var)

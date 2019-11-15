@@ -3,7 +3,7 @@ module Yugo
     class MethodResolution < Syntax
       attr_reader :object, :method_name, :arguments
 
-      Contract Syntax, Identifier, C::ArrayOf[Syntax] => C::Any
+      Contract Syntax, Syntax, C::ArrayOf[Syntax] => C::Any
       def initialize(object, method_name, arguments = [])
         @object = object
         @method_name = method_name

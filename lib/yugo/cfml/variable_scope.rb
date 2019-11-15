@@ -1,13 +1,24 @@
 module Yugo
   module CFML
     class VariableScope
-      def initialize(parent = nil, variables = Set.new)
-        @parent = nil
-        @variables = variables.to_set
+      attr_reader :context
+
+      def initialize(parent = nil, context = nil)
+        @parent    = parent
+        @variables = Set.new
+        @context   = context
       end
 
       def top_level?
         @parent.nil?
+      end
+
+      def in_boolean_context
+        self.class.new(self, :boolean)
+      end
+
+      def in_numeric_context
+        self.class.new(self, :numeric)
       end
 
       def variable_exists?(name)

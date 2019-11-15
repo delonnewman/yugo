@@ -1,7 +1,11 @@
+require 'singleton'
+
 module Yugo
   module Ruby
     class Boolean < SelfEvaluating; end
     class True < Boolean
+      include Singleton
+
       def initialize
         super('true')
       end
@@ -11,6 +15,8 @@ module Yugo
       end
     end
     class False < Boolean
+      include Singleton
+
       def initialize
         super('false')
       end

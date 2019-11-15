@@ -4,7 +4,7 @@ module Yugo
 
     REQUEST_PATH = 'REQUEST_PATH'.freeze
     CONTENT_TYPE = 'Content-Type'.freeze
-    ERB          = 'erb'.freeze
+    ERB          = '.erb'.freeze
 
     HTTP_404 = <<-HTML.freeze
       <html>
@@ -60,7 +60,7 @@ module Yugo
       end
 
       unless @pages.key?(:'/404')
-        @pages[:'/404'] = Page.new(self, StringIO.new(HTTP_404), file_type: :erb)
+        @pages[:'/404'] = Page.new(self, StringIO.new(HTTP_404), file_ext: ERB)
       end
 
       @pages
@@ -72,7 +72,7 @@ module Yugo
     end
 
     # compose middleware and return resulting app
-    def rack_app
+    def app
       @middleware.reduce(self) do |app, (klass, args)|
         klass.new(app, *args)
       end

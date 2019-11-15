@@ -2,9 +2,11 @@ module Yugo
   module CFML
     class String < Node
       def ruby_ast(scope)
-        elems = evaluate_elements(elements)
-        p elems
-        Yugo::Ruby::String.new(elems.join(''))
+        Yugo::Ruby::String.new(content)
+      end
+
+      def content
+        elements.slice(1..elements.length - 2).map(&:text_value).join('')
       end
 
       def evaluate_elements(elements)

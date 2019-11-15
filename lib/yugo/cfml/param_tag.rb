@@ -11,8 +11,10 @@ module Yugo
         if default.nil? && !scope.variable_exists?(ident.symbol)
           raise "The required parameter #{name.value.upcase} was not provided."
         else
-          Yugo::Ruby::Assignment.new(
-            Yugo::Ruby::InstanceVariable.new(ident), default, :'||=')
+          scope.add_variable_name(ident.symbol)
+          Yugo::ERB::StatementTag.new(
+            Yugo::Ruby::Assignment.new(
+              Yugo::Ruby::InstanceVariable.new(ident), default, :'||='))
         end
       end
     end

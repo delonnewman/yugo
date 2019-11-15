@@ -105,9 +105,13 @@ module Yugo
     end
 
     def include(file)
-      logger.info "including: #{file.inspect}"
       raise "include can only be called from within a page template" if @env.nil?
-      Page.new(site, File.join(File.dirname(path), file)).render(@env)
+      logger.info "including: #{file.inspect}"
+
+      @includes ||={}
+      return @includes[file] if site.cache_pages? && @includes.key?(file)
+
+      @includes[file] = Page.new(site, File.join(File.dirname(path), file)).render(@env)
     end
 
     def evaluate(str)

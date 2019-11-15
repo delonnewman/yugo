@@ -15,6 +15,11 @@ module Yugo
       def to_sexp
         @name.to_sym
       end
+
+      def to_sym
+        @name
+      end
+      alias symbol to_sym
     end
   end
 end

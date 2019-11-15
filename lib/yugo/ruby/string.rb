@@ -15,6 +15,10 @@ module Yugo
       def compile
         @value.to_json
       end
+
+      def as_identifier
+        Yugo::Ruby::Identifier.new(@value.downcase.to_sym)
+      end
     end
   end
 end

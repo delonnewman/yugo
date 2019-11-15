@@ -36,6 +36,7 @@ require_relative 'cfml/output_tag'
 require_relative 'cfml/if_tag'
 require_relative 'cfml/script_tag'
 require_relative 'cfml/include_tag'
+require_relative 'cfml/param_tag'
 
 require_relative 'cfml/parser'
 
@@ -101,8 +102,10 @@ module Yugo
     def parse_attribute_list(list, scope)
       init = {}
       unless list.nil? or list.empty?
-        list.elements[0].elements.reject { |elem| elem.text_value =~ /\A\s+\z/ }.reduce(init) do |h, attr|
-          h.merge!(attr.identifier.to_sym => attr.expression.ruby_ast(scope))
+        list.elements.each do |elem|
+          elem.elements.reject { |elem| elem.text_value =~ /\A\s+\z/ }.reduce(init) do |h, attr|
+            h.merge!(attr.identifier.to_sym => attr.expression.ruby_ast(scope))
+          end
         end
       end
       init

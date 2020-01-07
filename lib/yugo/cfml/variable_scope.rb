@@ -1,7 +1,7 @@
 module Yugo
   module CFML
     class VariableScope
-      attr_reader :context
+      attr_reader :context, :variables
 
       def initialize(parent = nil, context = nil)
         @parent    = parent
@@ -28,6 +28,16 @@ module Yugo
           @parent.variable_exists?(name)
         else
           false
+        end
+      end
+
+      def lookup(name)
+        if @variables.include?(name)
+          self
+        elsif @parent
+          @parent.lookup(name)
+        else
+          nil
         end
       end
 

@@ -11,6 +11,10 @@ module Yugo
       def compile
         "#{operator.compile}#{expression.compile}"
       end
+
+      def to_sexp
+        [operator.to_sexp, expression.to_sexp]
+      end
     end
   end
 end

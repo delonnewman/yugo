@@ -21,6 +21,13 @@ module Yugo
       super(key.to_sym, value)
     end
 
+    def clear
+      keys.each do |key|
+        delete(key)
+      end
+      true
+    end
+
     def yugo_dump(opts = {})
       label = opts.fetch(:label, 'struct')
 

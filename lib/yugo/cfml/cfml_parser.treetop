@@ -194,37 +194,33 @@ grammar CFML
   # Expressions
 
   rule expression
-    space? (function_application / prefix_operation / binary_operation / array_literal) <Yugo::CFML::Expression>
+    space? (function_application / comparative_operation / array_literal) <Yugo::CFML::Expression>
   end
 
   rule array_literal
     '[]' /  '[' expression ']' / '[' expression (',' expression)+ ']'
   end
 
-  rule binary_operation
-    logical_operation / comparative_operation / equality_operation / arithmetical_operation
-  end
-
-  rule logical_operation
-    comparative_operation space? logical_op space? logical_operation <Yugo::CFML::BinaryOperation>
-    /
-    comparative_operation
-  end
-
   rule comparative_operation
-    equality_operation space? comparative_op space? comparative_operation <Yugo::CFML::BinaryOperation>
+    additive_operation space? comparative_op space? comparative_operation <Yugo::CFML::BinaryOperation>
     /
-    equality_operation
+    additive_operation
   end
 
-  rule equality_operation
-    arithmetical_operation space? equality_op space? equality_operation <Yugo::CFML::BinaryOperation>
+  rule additive_operation
+    multiplicative_operation space? additive_op space? additive_operation <Yugo::CFML::BinaryOperation>
     /
-    arithmetical_operation
+    multiplicative_operation
   end
 
-  rule arithmetical_operation
-    primary space? arithmetical_op space? arithmetical_operation <Yugo::CFML::BinaryOperation>
+  rule multiplicative_operation
+    prefix_operation space? multiplicative_op space? multiplicative_operation <Yugp::CFML::BinaryOperation>
+    /
+    prefix_operation
+  end
+
+  rule prefix_operation
+    prefix_unary_op space? prefix_operation <Yugo::CFML::PrefixOperation>
     /
     primary
   end
@@ -252,29 +248,23 @@ grammar CFML
 
   # Operator sets
 
-  rule equality_op
-    eqv_op / isnot_op / is_op / equal_op / equals_op / eq_op / notequal_op / neq_op
+  rule additive_op
+    add_op / sub_op / and_op / xor_op / or_op / imp_op
   end
 
-  rule arithmetical_op
-    mult_op / div_op / add_op / sub_op / exp_op / mod_op / percent_mod_op
+  # TODO: Exponentiation should have higer precendence?
+  rule multiplicative_op
+    mult_op / div_op / mod_op / exp_op / percent_mod_op
   end
 
   rule comparative_op
-    concat_op / contains_op / doesnotcontain_op / greaterthanorequalto_op / gte_op / lessthanorequalto_op / lte_op /
-    gt_op / greaterthan_op / lt_op / lessthan_op
-  end
-
-  rule logical_op
-    and_op / xor_op / or_op / imp_op
-  end
-
-  rule prefix_operation
-    prefix_unary_op expression <Yugo::CFML::PrefixOperation>
+    concat_op / contains_op / doesnotcontain_op / greaterthanorequalto_op / gte_op / lessthanorequalto_op
+    / lte_op / gt_op / greaterthan_op / lt_op / lessthan_op / eqv_op / isnot_op / is_op / equal_op
+    / equals_op / eq_op / notequal_op / neq_op
   end
 
   rule prefix_unary_op
-    not_op / bang_not_op
+    not_op / bang_not_op / add_op / sub_op
   end
 
   # Operators

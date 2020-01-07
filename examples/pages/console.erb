@@ -16,7 +16,7 @@
       <button class="btn btn-primary">Evaluate</button>
     </form>
   </div>
-  <div class="col">
+  <div class="col overflow-auto">
     <% if form['expression'] %>
       <table class="table">
         <tr>
@@ -30,6 +30,10 @@
           <td>
             <%= evaluate(form['expression']) %>
           </td>
+        </tr>
+        <tr>
+          <th>Environment</th>
+          <td><%= format(Yugo::CFML::TOPLEVEL) %></td>
         </tr>
         <tr>
           <th>S-Expression</th>

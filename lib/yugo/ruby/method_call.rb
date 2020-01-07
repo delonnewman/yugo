@@ -23,7 +23,7 @@ module Yugo
 
       def to_sexp
         if @arguments.empty?
-          [@idenfitifer.to_sexp]
+          [@identifier.to_sexp]
         else
           [@identifier.to_sexp] + @arguments.map(&:to_sexp)
         end

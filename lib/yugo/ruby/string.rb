@@ -19,6 +19,21 @@ module Yugo
       def as_identifier
         Yugo::Ruby::Identifier.new(@value.downcase.to_sym)
       end
+
+      def as_instance_variable
+        Yugo::Ruby::InstanceVariable.new(as_identifier)
+      end
+
+      def as_method_access
+        obj, method = @value.split('.')
+        Yugo::Ruby::MethodResolution.new(
+          Yugo::Ruby::Identifier.new(obj.downcase.to_sym),
+          Yugo::Ruby::Identifier.new(method.downcase.to_sym))
+      end
+
+      def method_access?
+        !!@value.index('.')
+      end
     end
   end
 end

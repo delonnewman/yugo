@@ -184,7 +184,7 @@ grammar CFML
   end
 
   rule assignee
-    property_access / identifier
+    identifier
   end
 
   rule assignment_scope
@@ -194,11 +194,11 @@ grammar CFML
   # Expressions
 
   rule expression
-    space? (function_application / comparative_operation / array_literal) <Yugo::CFML::Expression>
+    space? (member_expression / method_call / function_application / comparative_operation / array_literal) <Yugo::CFML::Expression>
   end
 
   rule array_literal
-    '[]' /  '[' expression ']' / '[' expression (',' expression)+ ']'
+    '[' space? ']' /  '[' expression ']' / '[' expression (',' expression)+ ']'
   end
 
   rule comparative_operation
@@ -225,10 +225,36 @@ grammar CFML
     primary
   end
 
-  rule primary
-    function_application / array_literal / property_access
+  # Structs
+
+  rule member_expression
+    object:primary property_access+ <Yugo::CFML::PropertyAccess>
     /
+    object:function_application property_access+ <Yugo::CFML::PropertyAccess>
+  end
+
+  rule method_call
+    object:primary (property_access / function_application)+ <Yugo::CFML::PropertyAccess>
+    /
+    object:function_application (property_access / function_application)+ <Yugo::CFML::PropertyAccess>
+  end
+
+  rule property_access
+    dot_property_access / circumfix_property_access
+  end
+
+  rule circumfix_property_access
+    '[' (string / integer / identifier / function_application) ']'
+  end
+
+  rule dot_property_access
+    '.' identifier
+  end
+
+  rule primary
     null / boolean / identifier / float / integer / string
+    /
+    array_literal
     /
     paren_start space? expression space? paren_end
     {
@@ -405,32 +431,12 @@ grammar CFML
 
   rule function_application
     identifier function_arguments <Yugo::CFML::FunctionApplication>
+    /
+    member_expression function_arguments <Yugo::CFML::FunctionApplication>
   end
 
   rule function_arguments
     '(' space? ')' /  '(' space? expression space? ')' / '(' space? expression space? (',' expression)+ ')'
-  end
-
-  # Structs
-
-  rule property_access
-    interned_property_access / uninterned_property_access
-  end
-
-  rule interned_property_access
-    identifier '.' function_application <Yugo::CFML::PropertyAccess>
-    /
-    identifier '.' property_access <Yugo::CFML::PropertyAccess>
-    /
-    identifier '.' identifier <Yugo::CFML::PropertyAccess>
-  end
-
-  rule uninterned_property_access
-    identifier circumfix_property_access+ <Yugo::CFML::PropertyAccess>
-  end
-
-  rule circumfix_property_access
-    '[' expression ']'
   end
 
   # Literals

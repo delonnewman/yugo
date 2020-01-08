@@ -1,0 +1,266 @@
+grammar CFMLExpressions
+  rule expression
+    space? (comparative_operation / additive_operation) <Yugo::CFML::Expression>
+  end
+
+  rule array_literal
+    '[' space? ']' /  '[' expression ']' / '[' expression (',' expression)+ ']'
+  end
+
+  rule function_application
+    identifier function_arguments <Yugo::CFML::FunctionApplication>
+  end
+
+  rule function_arguments
+    '(' space? ')' /  '(' space? expression space? ')' / '(' space? expression space? (',' expression)+ ')'
+  end
+
+  rule comparative_operation
+    additive_operation space? comparative_op space? comparative_operation <Yugo::CFML::BinaryOperation>
+    /
+    additive_operation
+  end
+
+  rule additive_operation
+    multiplicative_operation space? additive_op space? additive_operation <Yugo::CFML::BinaryOperation>
+    /
+    multiplicative_operation
+  end
+
+  rule multiplicative_operation
+    prefix_operation space? multiplicative_op space? multiplicative_operation <Yugo::CFML::BinaryOperation>
+    /
+    prefix_operation
+  end
+
+  rule prefix_operation
+    prefix_unary_op space? prefix_operation <Yugo::CFML::PrefixOperation>
+    /
+    primary
+  end
+
+  rule primary
+    function_application
+    /
+    literal
+    /
+    array_literal
+    /
+    '(' space? expression space? ')'
+    {
+      def ruby_ast(scope)
+        expression.ruby_ast(scope)   
+      end
+    }
+  end
+
+  rule additive_op
+    add_op / sub_op / and_op / xor_op / or_op / imp_op
+  end
+
+  # TODO: Exponentiation should have higer precendence?
+  rule multiplicative_op
+    mult_op / div_op / mod_op / exp_op / percent_mod_op
+  end
+
+  rule comparative_op
+    concat_op / contains_op / doesnotcontain_op / greaterthanorequalto_op / gte_op / lessthanorequalto_op
+    / lte_op / gt_op / greaterthan_op / lt_op / lessthan_op / eqv_op / isnot_op / is_op / equal_op
+    / equals_op / eq_op / notequal_op / neq_op
+  end
+
+  rule prefix_unary_op
+    not_op / bang_not_op / add_op / sub_op
+  end
+
+  # Operators
+
+  rule not_op
+    [nN] [oO] [tT] space <Yugo::CFML::NotOperator>
+  end
+
+  rule bang_not_op
+    '!' <Yugo::CFML::NotOperator>
+  end
+
+  rule add_op
+    '+' <Yugo::CFML::AdditionOperator>
+  end
+
+  rule sub_op
+    '-' <Yugo::CFML::SubtractionOperator>
+  end
+
+  rule mult_op
+    '*' <Yugo::CFML::MultiplicationOperator>
+  end
+
+  rule div_op
+    '/' <Yugo::CFML::DivisionOperator>
+  end
+
+  rule exp_op
+    '^' <Yugo::CFML::ExponentOperator>
+  end
+
+  rule concat_op
+    '&' <Yugo::CFML::ConcatenationOperator>
+  end
+
+  rule mod_op
+    [mM] [oO] [dD] <Yugo::CFML::ModulusOperator>
+  end
+
+  rule percent_mod_op
+    '%' <Yugo::CFML::ModulusOperator>
+  end
+
+  rule is_op
+    [iI] [sS] <Yugo::CFML::EqualOperator>
+  end
+
+  rule equal_op
+    [eE] [qQ] [uU] [aA] [lL] <Yugo::CFML::EqualOperator>
+  end
+
+  rule equals_op
+    [eE] [qQ] [uU] [aA] [lL] [sS] <Yugo::CFML::EqualOperator>
+  end
+
+  rule eq_op
+    [eE] [qQ] <Yugo::CFML::EqualOperator>
+  end
+
+  rule isnot_op
+    [iI] [sS] [\s] [nN] [oO] [tT] <Yugo::CFML::NotEqualOperator>
+  end
+
+  rule notequal_op
+    [nN] [oO] [tT] [\s] [eE] [qQ] [uU] [aA] [lL] <Yugo::CFML::NotEqualOperator>
+  end
+
+  rule neq_op
+    [nN] [eE] [qQ] <Yugo::CFML::NotEqualOperator>
+  end
+
+  rule contains_op
+    [cC] [oO] [nN] [tT] [aA] [iI] [nN] [sS] <Yugo::CFML::ContainsOperator>
+  end
+
+  rule doesnotcontain_op
+    [dD] [oO] [eE] [sS] [\s] [nN] [oO] [tT] [\s] [cC] [oO] [nN] [tT] [aA] [iI] [nN] <Yugo::CFML::DoesNotContainOperator>
+  end
+
+  rule greaterthan_op
+    [gG] [rR] [eE] [aA] [tT] [eE] [rR] [\s] [tT] [hH] [aA] [nN] <Yugo::CFML::GreaterThanOperator>
+  end
+
+  rule gt_op
+    [gG] [tT] <Yugo::CFML::GreaterThanOperator>
+  end
+
+  rule or_equal_to
+    [\s] [oO] [rR] [\s] [eE] [qQ] [uU] [aA] [lL] [\s] [tT] [oO]
+  end
+
+  rule greaterthanorequalto_op
+    greaterthan_op or_equal_to <Yugo::CFML::GreaterThanOrEqualToOperator>
+  end
+
+  rule gte_op
+    [gG] [tT] [eE] <Yugo::CFML::GreaterThanOrEqualToOperator>
+  end
+
+  rule lessthan_op
+    [lL] [eE] [sS] [sS] [\s] [tT] [hH] [aA] [nN] <Yugo::CFML::LessThanOperator>
+  end
+
+  rule lt_op
+    [lL] [tT] <Yugo::CFML::LessThanOperator>
+  end
+
+  rule lessthanorequalto_op
+    lessthan_op or_equal_to <Yugo::CFML::LessThanOrEqualToOperator>
+  end
+
+  rule lte_op
+    [lL] [tT] [eE] <Yugo::CFML::LessThanOrEqualToOperator>
+  end
+
+  rule and_op
+    [aA] [nN] [dD] <Yugo::CFML::AndOperator>
+  end
+
+  rule or_op
+    [oO] [rR] <Yugo::CFML::OrOperator>
+  end
+
+  rule xor_op
+    [xX] [oO] [rR] <Yugo::CFML::XorOperator>
+  end
+
+  rule eqv_op
+    [eE] [qQ] [vV] <Yugo::CFML::EqvOperator>
+  end
+
+  rule imp_op
+    [iI] [mM] [pP] <Yugo::CFML::ImpOperator>
+  end
+
+  # Literals
+
+  rule literal
+    integer / float / string / identifier / boolean / null
+  end
+
+  rule integer
+    ('+' / '-')? [0-9]+ <Yugo::CFML::Integer>
+  end
+
+  rule float
+    ('+' / '-')? [0-9]+ (('.' [0-9]+) / ('e' [0-9]+)) <Yugo::CFML::Float>
+  end
+
+  rule string
+    double_quote_string / single_quote_string
+  end
+
+  rule quote
+    '#' expression '#' <Yugo::CFML::Quote>
+  end
+
+  rule double_quote_string
+    '"' ('""' / '##' / quote / [^"])* '"' <Yugo::CFML::String>
+  end
+  
+  rule single_quote_string
+    "'" ("''" / '##' / quote / [^'])* "'" <Yugo::CFML::String>
+  end
+
+  rule identifier
+    [a-zA-Z_] [a-zA-Z0-9_]* <Yugo::CFML::Identifier>
+  end
+
+  rule boolean
+    true / false
+  end
+
+  rule true
+    [tT] [rR] [uU] [eE] <Yugo::CFML::Boolean>
+  end
+
+  rule false
+    [fF] [aA] [lL] [sS] [eE] <Yugo::CFML::Boolean>
+  end
+
+  rule null
+    [nN] [uU] [lL] [lL] <Yugo::CFML::Null>
+  end
+
+  # Whitespace
+
+  rule space
+    [\s]+
+  end
+
+end

@@ -6,7 +6,7 @@ module Yugo
         # TODO: add function scoped variables
         if assignee.is_a?(Yugo::CFML::Identifier)
           name = assignee.text_value.downcase.to_sym
-          scope.add_variable_name(name)
+          scope.add_variable(name, expression)
           Yugo::Ruby::Assignment.new(assignee.ruby_ast(scope), exp)
         elsif assignee.is_a?(Yugo::CFML::PropertyAccess)
           Yugo::Ruby::Assignment.new(assignee.ruby_ast(scope), exp)

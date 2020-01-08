@@ -194,7 +194,7 @@ grammar CFML
   # Expressions
 
   rule expression
-    space? (member_expression / method_call / function_application / comparative_operation / array_literal) <Yugo::CFML::Expression>
+    space? (member_expression / function_application / comparative_operation) <Yugo::CFML::Expression>
   end
 
   rule array_literal

@@ -5,7 +5,7 @@ module Yugo
 
       def initialize(parent = nil, context = nil)
         @parent    = parent
-        @variables = Set.new
+        @variables = {}
         @context   = context
       end
 
@@ -22,7 +22,7 @@ module Yugo
       end
 
       def variable_exists?(name)
-        if @variables.include?(name)
+        if @variables.key?(name)
           true
         elsif @parent
           @parent.variable_exists?(name)
@@ -32,7 +32,7 @@ module Yugo
       end
 
       def lookup(name)
-        if @variables.include?(name)
+        if @variables.key?(name)
           self
         elsif @parent
           @parent.lookup(name)
@@ -41,8 +41,8 @@ module Yugo
         end
       end
 
-      def add_variable_name(name)
-        @variables << name
+      def add_variable(name, syntax)
+        @variables[name] = syntax
       end
     end
   end

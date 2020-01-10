@@ -7,6 +7,8 @@ require_relative 'ruby'
 require_relative 'erb'
 require_relative 'tags'
 
+require_relative 'java/utils'
+
 require_relative 'cfml/variable_scope'
 require_relative 'cfml/node'
 require_relative 'cfml/syntax'

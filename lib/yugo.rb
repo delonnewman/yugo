@@ -1,6 +1,8 @@
-require 'bundler/setup'
-Bundler.require
+require 'treetop'
+require 'rack'
+require 'contracts'
 
+require 'el'
 require 'erb'
 require 'uri'
 require 'logger'

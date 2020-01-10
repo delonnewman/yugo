@@ -3,17 +3,26 @@ module Yugo
     class Identifier < Node
       SPECIAL_IDENTIFIERS = (%i[evaluate].to_set + Yugo::Runtime.instance_methods(false).to_set).freeze
 
-      def ruby_ast(scope)
+      def ruby_ast(scope, resolve_identifiers: true)
+        ident = Yugo::Ruby::Identifier.new(symbol)
         if scope.nil?
-          Yugo::Ruby::Identifier.new(symbol)
+          ident
         elsif (scope_ = scope.lookup(symbol)) and scope_.top_level?
-          Yugo::Ruby::InstanceVariable.new(Yugo::Ruby::Identifier.new(symbol))
+          Yugo::Ruby::InstanceVariable.new(ident)
         elsif scope.variable_exists?(symbol) or SPECIAL_IDENTIFIERS.include?(symbol)
-          Yugo::Ruby::BlockVariable.new(Yugo::Ruby::Identifier.new(symbol))
+          Yugo::Ruby::BlockVariable.new(ident)
         else
           Yugo::CFML.logger.info "#{inspect}"
-          raise "Variable #{text_value} is undefined."
+          if resolve_identifiers
+            raise "Variable #{text_value} is undefined."
+          else
+            ident
+          end
         end
+      end
+
+      def as_symbol
+        Yugo::Ruby::Symbol.new(symbol)
       end
 
       def name

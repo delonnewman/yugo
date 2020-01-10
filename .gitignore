@@ -1,2 +1,4 @@
 .cpcache/
 .idea/
+.make-*
+*.class

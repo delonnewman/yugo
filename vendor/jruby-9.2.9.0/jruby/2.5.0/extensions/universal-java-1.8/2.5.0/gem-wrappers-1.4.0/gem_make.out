@@ -1,0 +1,25 @@
+current directory: /Users/delonnewman/Projects/UNMH/yugo/vendor/jruby-9.2.9.0/jruby/2.5.0/gems/gem-wrappers-1.4.0/ext/wrapper_generator
+/Users/delonnewman/Projects/UNMH/yugo/vendor/jruby-9.2.9.0/bin/jruby -r ./siteconf20200110-10969-16q7plg.rb extconf.rb
+GemWrappers: Can not wrap missing file: lock_jars
+GemWrappers: Can not wrap missing file: jirb
+GemWrappers: Can not wrap missing file: jruby.bash
+GemWrappers: Can not wrap missing file: jruby200.sh
+GemWrappers: Can not wrap missing file: testrb
+GemWrappers: Can not wrap missing file: jirb_swing
+GemWrappers: Can not wrap missing file: jruby
+GemWrappers: Can not wrap missing file: jgem
+GemWrappers: Can not wrap missing file: ast
+GemWrappers: Can not wrap missing file: jruby.sh
+GemWrappers: Can not wrap missing file: jrubyc
+
+current directory: /Users/delonnewman/Projects/UNMH/yugo/vendor/jruby-9.2.9.0/jruby/2.5.0/gems/gem-wrappers-1.4.0/ext/wrapper_generator
+make "DESTDIR=" clean
+make: *** No rule to make target `clean'.  Stop.
+
+current directory: /Users/delonnewman/Projects/UNMH/yugo/vendor/jruby-9.2.9.0/jruby/2.5.0/gems/gem-wrappers-1.4.0/ext/wrapper_generator
+make "DESTDIR="
+make: Nothing to be done for `all'.
+
+current directory: /Users/delonnewman/Projects/UNMH/yugo/vendor/jruby-9.2.9.0/jruby/2.5.0/gems/gem-wrappers-1.4.0/ext/wrapper_generator
+make "DESTDIR=" install
+make: Nothing to be done for `install'.

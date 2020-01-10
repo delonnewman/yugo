@@ -36,4 +36,3 @@ help:
 	@echo
 	@echo "Bundler Version: $(BUNDLER_VERSION)"
 	@echo "Java Version: $(JAVA_VERSION)"
-	@echo JAVA_HOME: $(JAVA_HOME)

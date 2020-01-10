@@ -1,6 +1,6 @@
 grammar CFMLExpressions
   rule expression
-    space? (comparative_operation / additive_operation) <Yugo::CFML::Expression>
+    space? (member_expression / comparative_operation / additive_operation) <Yugo::CFML::Expression>
   end
 
   rule array_literal
@@ -39,8 +39,19 @@ grammar CFMLExpressions
     primary
   end
 
+  rule member_expression
+    head:primary
+    tail:(
+      space? '.' space? (function_application / identifier)
+      /
+      space? '[' expression ']'
+    )*
+  end
+
   rule primary
     function_application
+    /
+    identifier
     /
     literal
     /
@@ -210,7 +221,7 @@ grammar CFMLExpressions
   # Literals
 
   rule literal
-    integer / float / string / identifier / boolean / null
+    integer / float / string / boolean / null
   end
 
   rule integer

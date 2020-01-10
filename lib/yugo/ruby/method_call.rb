@@ -11,6 +11,8 @@ module Yugo
 
       attr_reader :identifier, :arguments
 
+      # TODO: Add a MethodArguments type include Enumerable
+
       Contract Syntax, C::ArrayOf[Syntax] => C::Any
       def initialize(identifier, arguments = [])
         @identifier = identifier

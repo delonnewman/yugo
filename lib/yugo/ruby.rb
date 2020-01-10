@@ -2,6 +2,7 @@ require 'erb'
 
 require_relative 'ruby/syntax'
 require_relative 'ruby/self_evaluating'
+require_relative 'ruby/self'
 require_relative 'ruby/nil'
 require_relative 'ruby/boolean'
 require_relative 'ruby/integer'

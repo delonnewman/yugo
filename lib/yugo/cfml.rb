@@ -18,6 +18,8 @@ require_relative 'cfml/content'
 require_relative 'cfml/statement'
 require_relative 'cfml/expression'
 require_relative 'cfml/null'
+require_relative 'cfml/this'
+require_relative 'cfml/super'
 require_relative 'cfml/boolean'
 require_relative 'cfml/integer'
 require_relative 'cfml/float'
@@ -89,15 +91,13 @@ module Yugo
       evaluate(parse(str), env, scope)
     end
 
-    def parse(str)
+    def parse(str, source = 'string')
       logger.info "Parsing: #{str.inspect}"
-      res = Parser.parse(str)
-      raise "There was an error parsing the given string: #{str}" if res.nil?
-      res
+      Parser.parse(str, source)
     end
 
     def parse_file(file)
-      parse(IO.read(file))
+      parse(IO.read(file), file)
     end
 
     def parse_attribute_list(list, scope)
@@ -114,14 +114,24 @@ module Yugo
 
     # TODO: add key/value arguments
     def function_arguments(node, scope)
-      node.function_arguments.elements.flat_map do |elem|
-        if elem.respond_to?(:ruby_ast)
-          elem.ruby_ast(scope)
-        elsif !elem.elements.nil? and !elem.elements.empty?
-          elem.elements.map { |e| e.expression.ruby_ast(scope) }
-        else
-          []
+      args = node.function_arguments
+      if args.respond_to?(:argument_list)
+        args.argument_list.elements.flat_map do |elem|
+          if elem.respond_to?(:ruby_ast)
+            elem.ruby_ast(scope)
+          elsif !elem.elements.nil? and !elem.elements.empty?
+            elem.elements.map { |e| p e; e.expression.ruby_ast(scope) }
+          else
+            []
+          end
         end
+      elsif args.respond_to?(:attribute_list)
+        members = args.attribute_list.elements.map do |elem|
+          [elem.elements[1].identifier.as_symbol, elem.elements[1].expression.ruby_ast(scope)]
+        end
+        Yugo::Ruby::HashLiteral.new(members, include_braces: false)
+      else
+        raise "Don't know how to process these function arguments: #{node.inspect}"
       end
     end
 

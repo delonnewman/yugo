@@ -25,7 +25,7 @@ grammar CFML
   end
 
   rule attribute_list
-    (space (attribute))*
+    (space? (attribute))*
   end
 
   # <cfoutput>
@@ -194,11 +194,27 @@ grammar CFML
   # Expressions
 
   rule expression
-    space? (member_expression / function_application / comparative_operation) <Yugo::CFML::Expression>
+    space? (member_expression / comparative_operation / additive_operation) <Yugo::CFML::Expression>
   end
 
   rule array_literal
     '[' space? ']' /  '[' expression ']' / '[' expression (',' expression)+ ']'
+  end
+
+  rule function_application
+    identifier function_arguments <Yugo::CFML::FunctionApplication>
+  end
+
+  rule function_arguments
+    argument_list:(
+      '(' space? ')'
+      /
+      '(' space? expression space? ')'
+      /
+      '(' space? expression space? (',' expression)+ ')'
+    )
+    /
+    '(' attribute_list ')'
   end
 
   rule comparative_operation
@@ -214,7 +230,7 @@ grammar CFML
   end
 
   rule multiplicative_operation
-    prefix_operation space? multiplicative_op space? multiplicative_operation <Yugp::CFML::BinaryOperation>
+    prefix_operation space? multiplicative_op space? multiplicative_operation <Yugo::CFML::BinaryOperation>
     /
     prefix_operation
   end
@@ -225,54 +241,35 @@ grammar CFML
     primary
   end
 
-  # Structs
-
+  # TODO: need to evalute at into a Ruby AST
   rule member_expression
-    object:primary property_access+ <Yugo::CFML::PropertyAccess>
-    /
-    object:function_application property_access+ <Yugo::CFML::PropertyAccess>
-  end
-
-  rule method_call
-    object:primary (property_access / function_application)+ <Yugo::CFML::PropertyAccess>
-    /
-    object:function_application (property_access / function_application)+ <Yugo::CFML::PropertyAccess>
-  end
-
-  rule property_access
-    dot_property_access / circumfix_property_access
-  end
-
-  rule circumfix_property_access
-    '[' (string / integer / identifier / function_application) ']'
-  end
-
-  rule dot_property_access
-    '.' identifier
+    head:primary
+    tail:(
+      space? '.' space? (property:function_application / property:identifier)
+      /
+      space? '[' property:expression ']'
+    )*
+    <Yugo::CFML::PropertyAccess>
   end
 
   rule primary
-    null / boolean / identifier / float / integer / string
+    function_application
+    /
+    literal
+    /
+    this / super_keyword
+    /
+    identifier
     /
     array_literal
     /
-    paren_start space? expression space? paren_end
+    '(' space? expression space? ')'
     {
       def ruby_ast(scope)
         expression.ruby_ast(scope)   
       end
     }
   end
-
-  rule paren_start
-    '('
-  end
-
-  rule paren_end
-    ')'
-  end
-
-  # Operator sets
 
   rule additive_op
     add_op / sub_op / and_op / xor_op / or_op / imp_op
@@ -427,19 +424,11 @@ grammar CFML
     [iI] [mM] [pP] <Yugo::CFML::ImpOperator>
   end
 
-  # Functions
-
-  rule function_application
-    identifier function_arguments <Yugo::CFML::FunctionApplication>
-    /
-    member_expression function_arguments <Yugo::CFML::FunctionApplication>
-  end
-
-  rule function_arguments
-    '(' space? ')' /  '(' space? expression space? ')' / '(' space? expression space? (',' expression)+ ')'
-  end
-
   # Literals
+
+  rule literal
+    integer / float / string / boolean / null
+  end
 
   rule integer
     ('+' / '-')? [0-9]+ <Yugo::CFML::Integer>
@@ -451,6 +440,10 @@ grammar CFML
 
   rule string
     double_quote_string / single_quote_string
+  end
+
+  rule quote
+    '#' expression '#' <Yugo::CFML::Quote>
   end
 
   rule double_quote_string
@@ -479,6 +472,14 @@ grammar CFML
 
   rule null
     [nN] [uU] [lL] [lL] <Yugo::CFML::Null>
+  end
+  
+  rule this
+    [tT] [hH] [iI] [sS] <Yugo::CFML::This>
+  end
+
+  rule super_keyword
+    [sS] [uU] [pP] [eE] [rR] <Yugo::CFML::Super>
   end
 
   # Whitespace

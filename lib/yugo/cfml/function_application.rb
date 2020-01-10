@@ -1,12 +1,12 @@
 module Yugo
   module CFML
     class FunctionApplication < Node
-      def ruby_ast(scope)
+      def ruby_ast(scope, opts = {})
         if (m = FunctionMacros.macros[tag])
           m.call(self, scope)
         else
           Yugo::Ruby::MethodCall.new(
-              identifier.ruby_ast(scope),
+              identifier.ruby_ast(scope, opts),
               Yugo::CFML.function_arguments(self, scope)
           )
         end

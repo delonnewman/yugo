@@ -1,3 +1,0 @@
-export PATH="/Users/delonnewman/.rvm/gems/ruby-2.5.1@yugo/bin:/Users/delonnewman/.rvm/gems/ruby-2.5.1@global/bin:$PATH"
-export GEM_PATH="/Users/delonnewman/Projects/UNMH/yugo/vendor/jruby-9.2.9.0/jruby/2.5.0"
-export GEM_HOME="/Users/delonnewman/Projects/UNMH/yugo/vendor/jruby-9.2.9.0/jruby/2.5.0"

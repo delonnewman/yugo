@@ -2,14 +2,7 @@ module Yugo
   module Java
     module Utils
       def java_class(class_name)
-        parts = class_name.split('.').map do |part|
-          if part.downcase == part
-            part.capitalize
-          else
-            part
-          end
-        end
-        Yugo::Ruby::Identifier.from(parts.join('::').to_sym)
+        Yugo::Ruby::Identifier.from(class_name)
       end
 
       def init_java_class(class_name, arguments = [])

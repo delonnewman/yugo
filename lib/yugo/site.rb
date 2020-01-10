@@ -93,9 +93,9 @@ module Yugo
         @app.call(env)
       elsif page.nil?
         page = pages[:'/404']
-        Rack::Response.new(page.render(env), 404, header(page))
+        [404, header(page), [page.render(env)]]
       else
-        Rack::Response.new(page.render(env), 200, header(page))
+        [200, header(page), [page.render(env)]]
       end
     end
   end

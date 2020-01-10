@@ -4,12 +4,13 @@ module Yugo
       SPECIAL_IDENTIFIERS = (%i[evaluate].to_set + Yugo::Runtime.instance_methods(false).to_set).freeze
 
       def ruby_ast(scope, resolve_identifiers: true)
-        ident = Yugo::Ruby::Identifier.from(symbol)
+        sym = symbol(resolve_identifiers)
+        ident = Yugo::Ruby::Identifier.from(sym)
         if scope.nil?
           ident
-        elsif (scope_ = scope.lookup(symbol)) and scope_.top_level?
+        elsif (scope_ = scope.lookup(sym)) and scope_.top_level?
           Yugo::Ruby::InstanceVariable.new(ident)
-        elsif scope.variable_exists?(symbol) or SPECIAL_IDENTIFIERS.include?(symbol)
+        elsif scope.variable_exists?(sym) or SPECIAL_IDENTIFIERS.include?(sym)
           Yugo::Ruby::BlockVariable.new(ident)
         else
           Yugo::CFML.logger.info "#{inspect}"
@@ -21,16 +22,20 @@ module Yugo
         end
       end
 
-      def as_symbol
-        Yugo::Ruby::Symbol.new(symbol)
+      def as_symbol(*args)
+        Yugo::Ruby::Symbol.new(symbol(*args))
       end
 
-      def name
-        @name ||= text_value.downcase
+      def name(downcase = true)
+        if downcase
+          text_value.downcase
+        else
+          text_value
+        end
       end
 
-      def to_sym
-        @sym ||= name.to_sym
+      def to_sym(*args)
+        name(*args).to_sym
       end
       alias symbol to_sym
     end

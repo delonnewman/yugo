@@ -3,8 +3,9 @@ module Yugo
     class Identifier < Syntax
       attr_reader :name
 
-      def from(sym)
+      def self.from(name)
         @idents ||= {}
+        sym = name.to_sym
         @idents[sym] ||= new(sym)
       end
 

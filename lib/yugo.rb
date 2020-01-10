@@ -1,3 +1,4 @@
+require 'java'
 require 'treetop'
 require 'rack'
 require 'contracts'

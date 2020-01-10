@@ -26,7 +26,7 @@ module Yugo
       'CONTENT_LENGTH'    => 'CONTENT_LENGTH'
     }.freeze
 
-    attr_reader :site, :path, :content_type, :file_type, :logger
+    attr_reader :site, :path, :content_type, :file_type, :logger, :request
 
     # 'Variables' scope, the default scope of 'cfset' for 'page' scoped variables
     attr_reader :variables
@@ -90,10 +90,11 @@ module Yugo
 
     def render(env)
       # populate cgi, url, and form scopes
-      @env  = env
-      @cgi  = _cgi_variables(env)
-      @url  = _url_variables(env)
-      @form = _form_variables(env)
+      @env     = env
+      @request = Rack::Request.new(env)
+      @cgi     = _cgi_variables(env)
+      @url     = _url_variables(env)
+      @form    = _form_variables(env)
       case file_ext.to_sym
       when :'.erb'
         ::ERB.new(content).result(binding)
@@ -118,6 +119,7 @@ module Yugo
       ::ERB.new(Yugo::CFML.compile_string(str)).result(binding)
     end
 
+    # TODO: Move this to examples app
     def format(object, opts = {})
       object.ai(opts.merge(html: true))
     end

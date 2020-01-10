@@ -1,4 +1,5 @@
 require_relative '../../lib/yugo'
+require 'awesome_print'
 
 Site = Yugo::Site.new do |site|
   site.logger      = Logger.new(STDERR)

@@ -1,6 +1,7 @@
 PROJECT_NAME    := Yugo
 JAVA_VERSION    := 1.8.0
-RUBY_PATH       := vendor/jruby-9.2.9.0
+RUBY_VERSION    := jruby-9.2.9.0
+RUBY_PATH       := vendor/$(RUBY_VERSION)
 RUBY_BIN        := $(RUBY_PATH)/bin/jruby
 GEM_BIN         := $(RUBY_BIN) -S gem
 BUNDLER_PATH    := $(RUBY_PATH)/bin/bundle
@@ -34,5 +35,14 @@ clean:
 help:
 	@echo $(PROJECT_NAME) Makefile
 	@echo
+	@echo "Ruby Version: $(RUBY_VERSION)"
 	@echo "Bundler Version: $(BUNDLER_VERSION)"
 	@echo "Java Version: $(JAVA_VERSION)"
+	@echo
+	@echo "Tasks:"
+	@echo "  all - build project"
+	@echo " deps - pull dependencies"
+	@echo " test - run tests"
+	@echo " repl - load a project REPL/console"
+	@echo "clean - remove touch files"
+	@echo " help - display this message"

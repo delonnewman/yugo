@@ -17,7 +17,7 @@ module Yugo
       end
 
       def as_identifier
-        Yugo::Ruby::Identifier.new(@value.downcase.to_sym)
+        Yugo::Ruby::Identifier.from(@value.downcase.to_sym)
       end
 
       def as_instance_variable
@@ -27,8 +27,8 @@ module Yugo
       def as_method_access
         obj, method = @value.split('.')
         Yugo::Ruby::MethodResolution.new(
-          Yugo::Ruby::Identifier.new(obj.downcase.to_sym),
-          Yugo::Ruby::Identifier.new(method.downcase.to_sym))
+          Yugo::Ruby::Identifier.from(obj.downcase.to_sym),
+          Yugo::Ruby::Identifier.from(method.downcase.to_sym))
       end
 
       def method_access?

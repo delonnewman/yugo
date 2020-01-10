@@ -10,7 +10,7 @@ module Yugo
           when ContainsOperator
             Yugo::Ruby::MethodResolution.new(
                 left.ruby_ast(scope),
-                Yugo::Ruby::Identifier.new(:include?),
+                Yugo::Ruby::Identifier.from(:include?),
                 [right.ruby_ast(scope)]
             )
           else

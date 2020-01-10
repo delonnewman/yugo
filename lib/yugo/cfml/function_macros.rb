@@ -15,7 +15,7 @@ module Yugo
         @macros ||= constants.flat_map do |const|
           mod = const_get(const)
           mod.instance_methods(false).map do |name|
-            [name, mod.instance_method(name)]
+            [name, mod.instance_method(name).bind(mod)]
           end
         end.to_h
       end

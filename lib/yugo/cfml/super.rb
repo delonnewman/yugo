@@ -3,9 +3,9 @@ module Yugo
     class Super < Node
       def ruby_ast(_scope)
         Yugo::Ruby::MethodResolution.new(
-          Yugo::Ruby::Identifier.new(:self),
+          Yugo::Ruby::Identifier.from(:self),
           Yugo::Ruby::MethodCall.new(
-            Yugo::Ruby::Identifier.new(:class)))
+            Yugo::Ruby::Identifier.from(:class)))
       end
     end
   end

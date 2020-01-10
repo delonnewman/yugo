@@ -3,6 +3,11 @@ module Yugo
     class Identifier < Syntax
       attr_reader :name
 
+      def from(sym)
+        @idents ||= {}
+        @idents[sym] ||= new(sym)
+      end
+
       Contract ::Symbol => C::Any
       def initialize(name)
         @name = name

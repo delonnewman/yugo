@@ -4,7 +4,7 @@ module Yugo
       module StringFunctions
         def findnocase(node, scope)
           args = Yugo::CFML.function_arguments(node, scope)
-          substr = Yugo::Ruby::MethodResolution.new(args[0], Yugo::Ruby::Identifier.new(:downcase))
+          substr = Yugo::Ruby::MethodResolution.new(args[0], Yugo::Ruby::Identifier.from(:downcase))
           args_ = if args.length == 3
                     [substr, args[2]]
                   else
@@ -12,8 +12,8 @@ module Yugo
                   end
   
           ast = Yugo::Ruby::MethodResolution.new(
-            Yugo::Ruby::MethodResolution.new(args[1], Yugo::Ruby::Identifier.new(:downcase)),
-            Yugo::Ruby::MethodCall.new(Yugo::Ruby::Identifier.new(:index), args_))
+            Yugo::Ruby::MethodResolution.new(args[1], Yugo::Ruby::Identifier.from(:downcase)),
+            Yugo::Ruby::MethodCall.new(Yugo::Ruby::Identifier.from(:index), args_))
   
           if scope.context != :boolean
             Yugo::Ruby::BinaryOperation.new(
@@ -34,7 +34,7 @@ module Yugo
           ast = Yugo::Ruby::MethodResolution.new(
             args[1],
             Yugo::Ruby::MethodCall.new(
-              Yugo::Ruby::Identifier.new(:index), args_)
+              Yugo::Ruby::Identifier.from(:index), args_)
           )
   
           if scope.context != :boolean

@@ -9,15 +9,15 @@ module Yugo
             part
           end
         end
-        Yugo::Ruby::Identifier.new(parts.join('::').to_sym)
+        Yugo::Ruby::Identifier.from(parts.join('::').to_sym)
       end
 
       def init_java_class(class_name, arguments = [])
         klass = java_class(class_name)
         if arguments.empty?
-          Yugo::Ruby::MethodResolution.new(klass, Yugo::Ruby::Identifier.new(:new))
+          Yugo::Ruby::MethodResolution.new(klass, Yugo::Ruby::Identifier.from(:new))
         else
-          Yugo::Ruby::MethodResolution.new(klass, Yugo::Ruby::MethodCall.new(Yugo::Ruby::Identifier.new(:new), arguments))
+          Yugo::Ruby::MethodResolution.new(klass, Yugo::Ruby::MethodCall.new(Yugo::Ruby::Identifier.from(:new), arguments))
         end
       end
 

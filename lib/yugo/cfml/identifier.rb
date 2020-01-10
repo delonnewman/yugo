@@ -4,7 +4,7 @@ module Yugo
       SPECIAL_IDENTIFIERS = (%i[evaluate].to_set + Yugo::Runtime.instance_methods(false).to_set).freeze
 
       def ruby_ast(scope, resolve_identifiers: true)
-        ident = Yugo::Ruby::Identifier.new(symbol)
+        ident = Yugo::Ruby::Identifier.from(symbol)
         if scope.nil?
           ident
         elsif (scope_ = scope.lookup(symbol)) and scope_.top_level?

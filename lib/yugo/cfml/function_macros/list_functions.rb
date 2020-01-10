@@ -8,9 +8,9 @@ module Yugo
             Yugo::Ruby::MethodResolution.new(
               args[0],
               Yugo::Ruby::MethodCall.new(
-                Yugo::Ruby::Identifier.new(:split), [args[1] || Yugo::Ruby::String.new(',')])
+                Yugo::Ruby::Identifier.from(:split), [args[1] || Yugo::Ruby::String.new(',')])
             ),
-            Yugo::Ruby::Identifier.new(:last)
+            Yugo::Ruby::Identifier.from(:last)
           )
         end
 
@@ -20,9 +20,9 @@ module Yugo
             Yugo::Ruby::MethodResolution.new(
               args[0],
               Yugo::Ruby::MethodCall.new(
-                Yugo::Ruby::Identifier.new(:split), [args[2] || Yugo::Ruby::String.new(',')])
+                Yugo::Ruby::Identifier.from(:split), [args[2] || Yugo::Ruby::String.new(',')])
             ),
-            Yugo::Ruby::Identifier.new(:index),
+            Yugo::Ruby::Identifier.from(:index),
             [args[1]]
           )
   

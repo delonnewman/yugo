@@ -133,6 +133,21 @@ grammar CFML
     '<' [cC] [fF] [pP] [aA] [rR] [aA] [mM] attribute_list space? '>' <Yugo::CFML::ParamTag>
   end
 
+  # <cffunction>
+  # ------------
+
+  rule function_tag
+    open_function_tag function_tag_content? (arguments_tag / return_tag?)* end_function_tag <Yugo::CFML::FunctionTag>
+  end
+
+  rule open_function_tag
+    '<' [cC] [fF] [fF] [uU] [nN] [cC] [tT] [iI] [oO] [nN] attribute_list space? '>'
+  end
+
+  rule end_function_tag
+    '</' [cC] [fF] [fF] [uU] [nN] [cC] [tT] [iI] [oO] [nN] space? '>'
+  end
+
   rule quote
     '#' expression '#' <Yugo::CFML::Quote>
   end
@@ -260,8 +275,6 @@ grammar CFML
     this / super_keyword
     /
     identifier
-    /
-    array_literal
     /
     '(' space? expression space? ')'
     {

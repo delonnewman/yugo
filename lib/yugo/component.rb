@@ -1,14 +1,19 @@
-require 'forwardable'
-
 module Yugo
-  class Component
-    include Forwardable
+  module Component
+    def self.displayname(name = nil)
+      if name
+        @displayname = name
+      else
+        @displayname
+      end
+    end
 
-    # forward scopes to @page
-    def_delegator :@page, :server, :variables, :uri, :form
-
-    def initialize(page)
-      @page = page
+    def self.hint(hint = nil)
+      if hint
+        @hint = hint
+      else
+        @hint
+      end
     end
   end
 end

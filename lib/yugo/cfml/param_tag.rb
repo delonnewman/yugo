@@ -3,7 +3,7 @@ module Yugo
     class ParamTag < Node
       # TODO: add support for scoped variables, and other tag attributes
       def ruby_ast(scope)
-        attrs    = Yugo::CFML.parse_attribute_list(attribute_list, scope)
+        attrs    = Yugo::Utils.attribute_list(attribute_list, scope)
         default  = attrs.fetch(:default, Yugo::CFML::Null.new)
         name     = attrs.fetch(:name)
         ident    = name.as_identifier

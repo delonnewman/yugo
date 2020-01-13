@@ -17,7 +17,7 @@ grammar CFML
   # ====
 
   rule tag
-    output_tag / set_tag / if_tag / query_tag / script_tag / include_tag / param_tag
+    output_tag / set_tag / if_tag / query_tag / script_tag / include_tag / param_tag / function_tag
   end
 
   rule attribute
@@ -69,9 +69,15 @@ grammar CFML
     (!end_if_tag !elseif_tag !else_tag (tag / comment / char))* <Yugo::CFML::Content>
   end
 
+  # <cfelseif>
+  # ----------
+
   rule elseif_tag
     '<' [cC] [fF] [eE] [lL] [sS] [eE] [iI] [fF] space expression space? '>'
   end
+
+  # <cfelse>
+  # --------
 
   rule else_tag
     '<' [cC] [fF] [eE] [lL] [sS] [eE] '>'
@@ -127,7 +133,7 @@ grammar CFML
   end
 
   # <cfparam>
-  # -----------
+  # ---------
 
   rule param_tag
     '<' [cC] [fF] [pP] [aA] [rR] [aA] [mM] attribute_list space? '>' <Yugo::CFML::ParamTag>
@@ -137,7 +143,7 @@ grammar CFML
   # ------------
 
   rule function_tag
-    open_function_tag function_tag_content? (arguments_tag / return_tag?)* end_function_tag <Yugo::CFML::FunctionTag>
+    open_function_tag function_tag_content? function_data:(argument_tag / return_tag)* end_function_tag <Yugo::CFML::FunctionTag>
   end
 
   rule open_function_tag
@@ -146,6 +152,24 @@ grammar CFML
 
   rule end_function_tag
     '</' [cC] [fF] [fF] [uU] [nN] [cC] [tT] [iI] [oO] [nN] space? '>'
+  end
+
+  rule function_tag_content
+    (!end_function_tag !return_tag !argument_tag (tag / comment / char))* <Yugo::CFML::Content>
+  end
+
+  # <cfreturn>
+  # ----------
+
+  rule return_tag
+    '<' [cC] [fF] [rR] [eE] [tT] [uU] [rR] [nN] space? expression space? '>'
+  end
+
+  # <cfargument>
+  # ------------
+
+  rule argument_tag
+    '<' [cC] [fF] [aA] [rR] [gG] [uU] [mM] [eE] [nN] [tT] attribute_list space? '>'
   end
 
   rule quote
@@ -440,7 +464,7 @@ grammar CFML
   # Literals
 
   rule literal
-    integer / float / string / boolean / null
+    float / integer / string / boolean / null
   end
 
   rule integer

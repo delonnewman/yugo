@@ -15,7 +15,7 @@ module Yugo
       def evaluate_element(elem, scope)
         if elem.is_a?(Quote)
           Yugo::ERB::OutputTag.new(elem.ruby_ast(scope))
-        elsif Yugo::CFML.plain_node?(elem) and Yugo::CFML.elements_present?(elem)
+        elsif Yugo::Utils.plain_node?(elem) and Yugo::Utils.elements_present?(elem)
           evaluate_elements(elem.elements, scope)
         else
           Yugo::CFML.ruby_ast(elem, scope)

@@ -26,7 +26,7 @@ module Yugo
       'CONTENT_LENGTH'    => 'CONTENT_LENGTH'
     }.freeze
 
-    attr_reader :site, :path, :content_type, :file_type, :logger, :request
+    attr_reader :application, :path, :content_type, :file_type, :logger, :request
 
     # 'Variables' scope, the default scope of 'cfset' for 'page' scoped variables
     attr_reader :variables
@@ -43,19 +43,19 @@ module Yugo
     # 'form' scope
     attr_reader :form
 
-    def initialize(site, path, content_type: nil, file_ext: nil)
-      @site = site
+    def initialize(application, path, content_type: nil, file_ext: nil)
+      @application = application
       @path = path
       @content_type = content_type
       @file_ext = file_ext
       @variables = Yugo::Struct.new
-      @server = @site.server
+      @server = @application.server
       @logger = Logger.new(STDERR)
     end
 
-    # TODO: add caching with site configuration
+    # TODO: add caching with application configuration
     def content
-      return @content if site.cache_pages? && @content
+      return @content if application.cache_pages? && @content
 
       @content = if file?
                    IO.read(path)
@@ -110,13 +110,17 @@ module Yugo
       logger.info "including: #{file.inspect}"
 
       @includes ||={}
-      return @includes[file] if site.cache_pages? && @includes.key?(file)
+      return @includes[file] if application.cache_pages? && @includes.key?(file)
 
-      @includes[file] = Page.new(site, File.join(File.dirname(path), file)).render(@env)
+      @includes[file] = Page.new(application, File.join(File.dirname(path), file)).render(@env)
     end
 
     def evaluate(str)
-      ::ERB.new(Yugo::CFML.compile_string(str)).result(binding)
+      begin
+        ::ERB.new(Yugo::CFML.compile_string(str)).result(binding)
+      rescue => e
+        e.message
+      end
     end
 
     # TODO: Move this to examples app

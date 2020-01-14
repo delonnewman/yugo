@@ -1,5 +1,5 @@
 module Yugo
-  class Site
+  class Application
     DEFAULT_PAGES_PATH = '/pages'.freeze
 
     REQUEST_PATH = 'REQUEST_PATH'.freeze
@@ -15,7 +15,7 @@ module Yugo
         <h1>Page Not Found</h1>
         <p>Here are some valid options:</p>
         <ul>
-          <% site.pages.keys.each do |page| %>
+          <% application.pages.keys.each do |page| %>
             <li><a href="<%= page %>"><%= page %></a></li>
           <% end %>
         </ul>

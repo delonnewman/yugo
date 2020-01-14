@@ -1,2 +1,2 @@
-require_relative 'config/site'
-run Site.app
+require_relative 'config/application'
+run YugoExamples

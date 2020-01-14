@@ -12,18 +12,48 @@ module Yugo
       @parent.nil?
     end
 
+    def in_scope_of?(context)
+      @contexts ||= {}
+      @contexts[context] ||=
+        if @context == context
+          true
+        elsif @parent
+          @parent.in_scope_of?(context)
+        else
+          false
+        end
+    end
+
+    def erb_context?
+      !function_scope? and !component_scope?
+    end
+
     def function_scope?
-      if @context == :function
-        true
-      elsif @parent
-        @parent.function_scope?
-      else
-        false
-      end
+      in_scope_of?(:function)
+    end
+
+    def component_scope?
+      in_scope_of?(:component)
+    end
+
+    def boolean_context?
+      in_scope_of?(:boolean)
+    end
+
+    def numeric_context?
+      in_scope_of?(:numeric)
     end
 
     def new_scope(context = nil)
       self.class.new(self, context)
+    end
+
+    def in_function_scope
+      new_scope(:function)
+    end
+
+    def in_component_scope
+      new_scope(:component)
     end
 
     def in_boolean_context

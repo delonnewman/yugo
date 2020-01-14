@@ -17,7 +17,7 @@ grammar CFML
   # ====
 
   rule tag
-    output_tag / set_tag / if_tag / query_tag / script_tag / include_tag / param_tag / function_tag
+    output_tag / set_tag / if_tag / query_tag / script_tag / include_tag / param_tag / function_tag / return_tag
   end
 
   rule attribute

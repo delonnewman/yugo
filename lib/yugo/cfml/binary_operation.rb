@@ -5,20 +5,40 @@ module Yugo
         op    = elements[2]
         left  = elements[0]
         right = elements[4]
-        if op.method_call?
-          case op
-          when ContainsOperator
-            Yugo::Ruby::MethodResolution.new(
-                left.ruby_ast(scope),
-                Yugo::Ruby::Identifier.from(:include?),
-                [right.ruby_ast(scope)]
-            )
-          else
-            raise Yugo::TypeError, "Don't know how to build a Ruby AST for #{op.inspect}"
-          end
+        case op
+        when ContainsOperator
+          contains_operator(left, right, scope)
+        when EqualOperator
+          equal_operator(op, left, right, scope)
         else
-          Yugo::Ruby::BinaryOperation.new(op.ruby_ast(scope), left.ruby_ast(scope), right.ruby_ast(scope))
+          binary_operator(op, left, right, scope)
         end
+      end
+
+      def contains_operator(left, right, scope)
+        Yugo::Ruby::MethodResolution.new(
+          left.ruby_ast(scope),
+          Yugo::Ruby::Identifier.from(:include?),
+          [right.ruby_ast(scope)]
+        )
+      end
+
+      def equal_operator(op, left, right, scope)
+        if left.is_a?(CFML::Null)
+          Yugo::Ruby::MethodResolution.new(
+            right.ruby_ast(scope),
+            Yugo::Ruby::Identifier.from(:nil?))
+        elsif right.is_a?(CFML::Null)
+          Yugo::Ruby::MethodResolution.new(
+            left.ruby_ast(scope),
+            Yugo::Ruby::Identifier.from(:nil?))
+        else
+          binary_operator(op, left, right, scope)
+        end
+      end
+
+      def binary_operator(op, left, right, scope)
+        Yugo::Ruby::BinaryOperation.new(op.ruby_ast(scope), left.ruby_ast(scope), right.ruby_ast(scope))
       end
     end
   end

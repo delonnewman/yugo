@@ -4,8 +4,12 @@ module Yugo
       def ruby_ast(scope)
         nodes = elements.flat_map do |elem|
           evaluate_element(elem, scope)
+        end.reject(&:nil?)
+        if scope.erb_context?
+          Yugo::ERB::Content.new(nodes)
+        else
+          Yugo::Ruby::Program.new(nodes)
         end
-        Yugo::ERB::Content.new(nodes)
       end
 
       def evaluate_element(elem, scope)

@@ -58,7 +58,15 @@ module Yugo
       node.class == Treetop::Runtime::SyntaxNode
     end
 
+    def plain_node(elem, scope)
+      if elem.text_value.empty? or elem.text_value =~ /^\s+$/
+        scope.erb_context? ? Yugo::ERB::Text.new(elem.text_value) : nil
+      else
+        scope.erb_context? ? Yugo::ERB::Text.new(elem.text_value) : Yugo::Ruby::Comment.new(elem.text_value)
+      end
+    end
+
     module_function :java_class, :attribute_list, :function_arguments,
-                    :elements_empty?, :elements_present?, :plain_node?
+                    :elements_empty?, :elements_present?, :plain_node?, :plain_node
   end
 end

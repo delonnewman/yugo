@@ -34,7 +34,11 @@ module Yugo
 
         ast = Yugo::Ruby::Method.new(name.as_identifier, arg_list, body(scope_))
         scope.add_variable(name.as_symbol, ast)
-        ast
+        if scope.erb_context?
+          Yugo::ERB::StatementTag.new(ast)
+        else
+          ast
+        end
       end
 
       def arguments(scope)
@@ -56,9 +60,11 @@ module Yugo
       end
 
       def body(scope)
-        function_body.content
+        exprs = function_body.content
           .reject { |elem| elem.is_a?(ArgumentTag) }
           .map { |elem| Yugo::CFML.ruby_ast(elem, scope) }
+          .reject(&:nil?)
+        Yugo::Ruby::Program.new(exprs)
       end
     end
   end

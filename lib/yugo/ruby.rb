@@ -1,6 +1,8 @@
 require 'erb'
 
 require_relative 'ruby/syntax'
+require_relative 'ruby/program'
+require_relative 'ruby/comment'
 require_relative 'ruby/self_evaluating'
 require_relative 'ruby/self'
 require_relative 'ruby/nil'
@@ -23,7 +25,6 @@ require_relative 'ruby/method_resolution'
 require_relative 'ruby/binary_operation'
 require_relative 'ruby/unary_operation'
 require_relative 'ruby/operator'
-require_relative 'ruby/program'
 
 require_relative 'ruby/if_clause'
 require_relative 'ruby/elsif_clause'

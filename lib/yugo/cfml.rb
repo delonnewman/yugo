@@ -55,10 +55,10 @@ module Yugo
     TOPLEVEL = Scope.new
 
     def ruby_ast(node, scope = TOPLEVEL)
-      if node.respond_to?(:ruby_ast)
-        node.ruby_ast(scope)
+      if Yugo::Utils.plain_node?(node)
+        Yugo::Utils.plain_node(node, scope)
       else
-        Yugo::ERB::Text.new(node.text_value)
+        node.ruby_ast(scope)
       end
     end
 

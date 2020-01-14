@@ -7,7 +7,7 @@ module Yugo
 
       Contract String => String
       def compile(template)
-        ::ERB.new(template.lines.map { |x| x.chomp.sub(/^\s+/, '') }.join('')).result(binding)
+        ::ERB.new(template.lines.map { |x| x.sub(/^\s+/, '') }.join('')).result(binding)
       end
     end
   end

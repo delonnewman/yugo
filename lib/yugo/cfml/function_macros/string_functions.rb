@@ -15,7 +15,7 @@ module Yugo
             Yugo::Ruby::MethodResolution.new(args[1], Yugo::Ruby::Identifier.from(:downcase)),
             Yugo::Ruby::MethodCall.new(Yugo::Ruby::Identifier.from(:index), args_))
   
-          if scope.context != :boolean
+          if not scope.boolean_context?
             Yugo::Ruby::BinaryOperation.new(
               Yugo::Ruby::Operator.new(:'||'), ast, Yugo::Ruby::Integer.new(0))
           else
@@ -37,7 +37,7 @@ module Yugo
               Yugo::Ruby::Identifier.from(:index), args_)
           )
   
-          if scope.context != :boolean
+          if not scope.boolean_context?
             Yugo::Ruby::BinaryOperation.new(
               Yugo::Ruby::Operator.new(:'||'),
               ast,

@@ -1,8 +1,9 @@
+require 'singleton'
+
 module Yugo
   module Ruby
     class End < Syntax
-      def initialize
-      end
+      include Singleton
 
       def compile
         'end'

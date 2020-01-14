@@ -26,7 +26,7 @@ module Yugo
             [args[1]]
           )
   
-          if scope.context != :boolean
+          if not scope.boolean_context?
             Yugo::Ruby::BinaryOperation.new(
               Yugo::Ruby::Operator.new(:'||'),
               ast,

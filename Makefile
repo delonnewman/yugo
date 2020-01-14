@@ -30,10 +30,7 @@ all: deps
 
 setup: $(RUBY_INSTALL_PATH) $(BUNDLER_BIN)
 
-deps: .make-deps
-
-.make-deps: $(BUNDLER_LOCK_FILE)
-	@touch .make-deps
+deps: $(BUNDLER_LOCK_FILE)
 
 test: deps
 

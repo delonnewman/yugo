@@ -5,7 +5,7 @@ module Yugo
         OBJECT_TYPES = %w{component java}
 
         def createobject(node, scope)
-          args = Yugo::CFML.function_arguments(node, scope)
+          args = Yugo::Utils.function_arguments(node, scope)
           case args[0]
           when Yugo::Ruby::String
             case args[0].value
@@ -13,7 +13,7 @@ module Yugo
               # load component
               raise "loading components is not implmented"
             when 'java'
-              Yugo::Java::Utils.java_class(args[1].value)
+              Yugo::Utils.java_class(args[1].value)
             else
               raise "Don't know how to create an object of this type: #{args[0].value.inspect}"
             end
@@ -23,7 +23,7 @@ module Yugo
         end
 
         def init(node, scope)
-          args = Yugo::CFML.function_arguments(node, scope)
+          args = Yugo::Utils.function_arguments(node, scope)
           Yugo::Ruby::MethodCall.new(Yugo::Ruby::Identifier.from(:new), args)
         end
       end

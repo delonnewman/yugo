@@ -3,13 +3,13 @@ require 'treetop'
 
 require_relative 'runtime'
 
-require_relative 'ruby'
 require_relative 'erb'
+require_relative 'ruby'
 require_relative 'tags'
 
 require_relative 'utils'
+require_relative 'scope'
 
-require_relative 'cfml/variable_scope'
 require_relative 'cfml/node'
 require_relative 'cfml/syntax'
 require_relative 'cfml/content'
@@ -52,7 +52,7 @@ module Yugo
       @logger ||= Logger.new(STDERR)
     end
 
-    TOPLEVEL = VariableScope.new
+    TOPLEVEL = Scope.new
 
     def ruby_ast(node, scope = TOPLEVEL)
       if node.respond_to?(:ruby_ast)

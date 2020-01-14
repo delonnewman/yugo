@@ -3,7 +3,7 @@ module Yugo
     module FunctionMacros
       module ListFunctions
         def lastlist(node, scope)
-          args = Yugo::CFML.function_arguments(node, scope)
+          args = Yugo::Utils.function_arguments(node, scope)
           Yugo::Ruby::MethodResolution.new(
             Yugo::Ruby::MethodResolution.new(
               args[0],
@@ -15,7 +15,7 @@ module Yugo
         end
 
         def listfind(node, scope)
-          args = Yugo::CFML.function_arguments(node, scope)
+          args = Yugo::Utils.function_arguments(node, scope)
           ast = Yugo::Ruby::MethodResolution.new(
             Yugo::Ruby::MethodResolution.new(
               args[0],

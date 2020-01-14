@@ -51,7 +51,7 @@ grammar CFML
   # -------
 
   rule set_tag
-    '<' [cC] [fF] [sS] [eE] [tT] space statement space? '>' <Yugo::CFML::SetTag>
+    '<' [cC] [fF] [sS] [eE] [tT] space? statement:statement? space? '>' <Yugo::CFML::SetTag>
   end
 
   # <cfif>
@@ -143,7 +143,16 @@ grammar CFML
   # ------------
 
   rule function_tag
-    open_function_tag function_tag_content? function_data:(argument_tag / return_tag)* end_function_tag <Yugo::CFML::FunctionTag>
+    open_function_tag
+    function_body:(
+      function_tag_content*
+      {
+        def content
+          elements.map { |x| x.elements[1] }
+        end
+      }
+    )
+    end_function_tag <Yugo::CFML::FunctionTag>
   end
 
   rule open_function_tag
@@ -155,21 +164,21 @@ grammar CFML
   end
 
   rule function_tag_content
-    (!end_function_tag !return_tag !argument_tag (tag / comment / char))* <Yugo::CFML::Content>
+    !end_function_tag (return_tag / argument_tag / tag / comment / char) <Yugo::CFML::FunctionContent>
   end
 
   # <cfreturn>
   # ----------
 
   rule return_tag
-    '<' [cC] [fF] [rR] [eE] [tT] [uU] [rR] [nN] space? expression space? '>'
+    '<' [cC] [fF] [rR] [eE] [tT] [uU] [rR] [nN] space? expression space? '>' <Yugo::CFML::ReturnTag>
   end
 
   # <cfargument>
   # ------------
 
   rule argument_tag
-    '<' [cC] [fF] [aA] [rR] [gG] [uU] [mM] [eE] [nN] [tT] attribute_list space? '>'
+    '<' [cC] [fF] [aA] [rR] [gG] [uU] [mM] [eE] [nN] [tT] attribute_list space? '>' <Yugo::CFML::ArgumentTag>
   end
 
   rule quote
@@ -233,7 +242,7 @@ grammar CFML
   # Expressions
 
   rule expression
-    space? (member_expression / comparative_operation / additive_operation) <Yugo::CFML::Expression>
+    space? (comparative_operation / additive_operation / member_expression) <Yugo::CFML::Expression>
   end
 
   rule array_literal

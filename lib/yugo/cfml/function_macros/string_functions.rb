@@ -3,7 +3,7 @@ module Yugo
     module FunctionMacros
       module StringFunctions
         def findnocase(node, scope)
-          args = Yugo::CFML.function_arguments(node, scope)
+          args = Yugo::Utils.function_arguments(node, scope)
           substr = Yugo::Ruby::MethodResolution.new(args[0], Yugo::Ruby::Identifier.from(:downcase))
           args_ = if args.length == 3
                     [substr, args[2]]
@@ -24,7 +24,7 @@ module Yugo
         end
   
         def find(node, scope)
-          args = Yugo::CFML.function_arguments(node, scope)
+          args = Yugo::Utils.function_arguments(node, scope)
           args_ = if args.length == 3
                     [args[0], args[2]]
                   else

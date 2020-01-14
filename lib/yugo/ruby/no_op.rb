@@ -2,15 +2,15 @@ require 'singleton'
 
 module Yugo
   module Ruby
-    class Nil < SelfEvaluating
+    class NoOp < SelfEvaluating
       include Singleton
 
       def initialize
-        super('nil')
+        super('')
       end
 
       def to_sexp
-        :nil
+        :no_op
       end
     end
   end

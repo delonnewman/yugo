@@ -7,7 +7,7 @@ module Yugo
         else
           Yugo::Ruby::MethodCall.new(
               identifier.ruby_ast(scope, opts),
-              Yugo::CFML.function_arguments(self, scope)
+              Yugo::Utils.function_arguments(self, scope)
           )
         end
       end

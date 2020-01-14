@@ -11,6 +11,7 @@ module Yugo
 
       attr_reader :identifier, :arguments
 
+      Contract Identifier, C::ArrayOf[Syntax] => C::Any
       def initialize(identifier, arguments = [])
         @identifier = identifier
         @arguments = arguments

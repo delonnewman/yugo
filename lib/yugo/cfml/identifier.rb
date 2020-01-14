@@ -9,7 +9,12 @@ module Yugo
         if scope.nil?
           ident
         elsif (scope_ = scope.lookup(sym)) and scope_.top_level?
-          Yugo::Ruby::InstanceVariable.new(ident)
+          var = scope_.variables[sym]
+          if var.is_a?(Yugo::Ruby::Method)
+            ident
+          else
+            Yugo::Ruby::InstanceVariable.new(ident)
+          end
         elsif scope.variable_exists?(sym) or SPECIAL_IDENTIFIERS.include?(sym)
           Yugo::Ruby::BlockVariable.new(ident)
         else

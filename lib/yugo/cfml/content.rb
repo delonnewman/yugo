@@ -8,10 +8,6 @@ module Yugo
         Yugo::ERB::Content.new(nodes)
       end
 
-      def to_sexp
-        [:content] + @elements.map { |elem| Yugo::CFML.to_sexp(elem) }
-      end
-
       def evaluate_element(elem, scope)
         if elem.is_a?(Quote)
           Yugo::ERB::OutputTag.new(elem.ruby_ast(scope))

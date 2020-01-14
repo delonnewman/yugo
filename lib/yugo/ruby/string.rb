@@ -3,12 +3,23 @@ module Yugo
     class String < SelfEvaluating
       def as_boolean
         case @value.downcase
-        when 'no'
-          Yugo::Ruby::True.instance
-        when 'yes'
+        when 'no', 'false'
           Yugo::Ruby::False.instance
+        when 'yes', 'true'
+          Yugo::Ruby::True.instance
         else
           self
+        end
+      end
+
+      def as_ruby_boolean
+        case @value.downcase
+        when 'no', 'false'
+          false
+        when 'yes', 'true'
+          true
+        else
+          nil
         end
       end
 
@@ -16,8 +27,12 @@ module Yugo
         @value.to_json
       end
 
+      def as_symbol
+        @value.downcase.to_sym
+      end
+
       def as_identifier
-        Yugo::Ruby::Identifier.from(@value.downcase.to_sym)
+        Yugo::Ruby::Identifier.from(as_symbol)
       end
 
       def as_instance_variable

@@ -23,10 +23,6 @@ module Yugo
         end
       end
 
-      def compile
-        @value.to_json
-      end
-
       def as_symbol
         @value.downcase.to_sym
       end
@@ -48,6 +44,10 @@ module Yugo
 
       def method_access?
         !!@value.index('.')
+      end
+
+      def to_sexp
+        s(:str, @value)
       end
     end
   end

@@ -1,6 +1,7 @@
 module Yugo
   module Ruby
     class Operator < Syntax
+      Contract ::Symbol => C::Any
       def initialize(op)
         @op = op
       end

@@ -11,7 +11,7 @@ module Yugo
       end
 
       def to_sexp
-        true
+        s(:true)
       end
     end
     class False < Boolean
@@ -22,7 +22,7 @@ module Yugo
       end
 
       def to_sexp
-        false
+        s(:false)
       end
     end
   end

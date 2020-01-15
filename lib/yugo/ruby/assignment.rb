@@ -1,28 +1,35 @@
 module Yugo
   module Ruby
     class Assignment < Syntax
-      TEMPLATE = <<-RUBY
-        <%= assignee.compile %> <%= operator.to_s %> <%= assigned.compile %>
-      RUBY
-
-      OPERATORS = %i[= += -= ||= &&=].to_set.freeze
+      OPERATORS = %i[+ - || &&].to_set.freeze
       Operator = -> (val) { OPERATORS.include?(val) }
 
       attr_reader :assignee, :assigned, :operator
 
       Contract Syntax, Syntax, C::Maybe[Operator] => C::Any
-      def initialize(assignee, assigned, operator = :'=')
+      def initialize(assignee, assigned, operator = nil)
         @assignee = assignee
         @assigned = assigned
         @operator = operator
       end
 
-      def compile
-        super(TEMPLATE)
+      def sexp_tag
+        case @assignee
+        when InstanceVariable
+          :ivasgn
+        when BlockVariable
+          :lvasgn
+        else
+          raise "Invalid assignee"
+        end
       end
 
       def to_sexp
-        [@operator, @assignee.to_sexp, @assigned.to_sexp]
+        if @operator
+          s(:'op-asgn', s(sexp_tag, @assignee.to_sexp), @assigned.to_sexp)
+        else
+          s(sexp_tag, @assignee.to_sexp, @assigned.to_sexp)
+        end
       end
     end
   end

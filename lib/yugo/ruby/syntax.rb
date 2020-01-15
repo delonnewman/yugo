@@ -5,9 +5,14 @@ module Yugo
 
       C = Contracts
 
-      Contract String => String
-      def compile(template)
-        ::ERB.new(template.lines.map { |x| x.sub(/^\s+/, '') }.join('')).result(binding)
+      protected
+
+      def compile
+        Unparser.unparse(to_sexp)
+      end
+
+      def s(type, *children)
+        Parser::AST::Node.new(type, children)
       end
     end
   end

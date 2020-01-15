@@ -3,16 +3,13 @@ module Yugo
     class ArrayLiteral < Syntax
       attr_reader :members
 
+      Contract C::ArrayOf[Syntax] => C::Any
       def initialize(members)
         @members = members
       end
 
-      def compile
-        "[" + @members.map(&:compile).join(', ') + "]"
-      end
-
       def to_sexp
-        @members.map(&:to_sexp)
+        s(:array, *@members.map(&:to_sexp))
       end
     end
   end

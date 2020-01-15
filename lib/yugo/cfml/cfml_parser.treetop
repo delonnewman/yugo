@@ -164,7 +164,7 @@ grammar CFML
   end
 
   rule function_tag_content
-    !end_function_tag (return_tag / argument_tag / tag / comment / char) <Yugo::CFML::FunctionContent>
+    !end_function_tag (return_tag / argument_tag / tag / comment / char) <Yugo::CFML::Content>
   end
 
   # <cfreturn>
@@ -180,6 +180,13 @@ grammar CFML
   rule argument_tag
     '<' [cC] [fF] [aA] [rR] [gG] [uU] [mM] [eE] [nN] [tT] attribute_list space? '>' <Yugo::CFML::ArgumentTag>
   end
+
+  # <cfcomponent>
+  # -------------
+
+#  rule component_tag
+#
+#  end
 
   rule quote
     '#' expression '#' <Yugo::CFML::Quote>
@@ -232,7 +239,7 @@ grammar CFML
   end
 
   rule assignee
-    identifier
+    identifier / member_expression
   end
 
   rule assignment_scope

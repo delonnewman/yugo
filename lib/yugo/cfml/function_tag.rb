@@ -8,18 +8,6 @@ module Yugo
       end
     end
 
-    class FunctionContent < Node
-      def ruby_ast(scope)
-        elem = elements[1]
-        case elem
-        when ArugmentTag
-          Yugo::Ruby::NoOp.instance
-        else
-          elem.ruby_ast(scope)
-        end
-      end
-    end
-
     class FunctionTag < Node
       def ruby_ast(scope)
         scope_ = scope.new_scope(:function)

@@ -5,9 +5,9 @@ module Yugo
 
       # TODO: add indentation level?
 
-      Contract C::ArrayOf[Syntax] => C::Any
-      def initialize(expressions)
-        @expressions = expressions
+      Contract C::Maybe[C::ArrayOf[Syntax]] => C::Any
+      def initialize(expressions = nil)
+        @expressions = expressions || []
       end
 
       def each
@@ -16,6 +16,10 @@ module Yugo
         else
           @expressions.each
         end
+      end
+
+      def empty?
+        @expressions.empty?
       end
 
       def compile

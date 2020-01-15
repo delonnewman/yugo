@@ -1,14 +1,6 @@
 module Yugo
   module Ruby
     class Method < Syntax
-      TEMPLATE = <<-RUBY
-        def <%= name.compile %>(<%= arguments.map(&:compile).map(&:chomp).join(', ') %>)
-          <% body.each do |line| %>
-          <%= line.compile %>
-          <% end %>
-        end
-      RUBY
-
       attr_reader :name, :arguments, :body
 
       Contract Identifier, C::ArrayOf[Ruby::Syntax], C::Or[Ruby::Program, ERB::Content] => C::Any
@@ -18,12 +10,14 @@ module Yugo
         @body = body
       end
 
-      def compile
-        super(TEMPLATE)
-      end
-
       def to_sexp
-        [:method, @name.to_sexp, @arguments.map(&:to_sexp)] + @body.map(&:to_sexp)
+        name = @name.symbol
+        args = s(:args, *@arguments.map { |arg| s(:arg, arg.to_sexp) })
+        if @body.empty?
+          s(:def, name, args, nil)
+        else
+          s(:def, name, args, *@body.map(&:to_sexp))
+        end
       end
     end
   end

@@ -9,6 +9,7 @@ require_relative 'tags'
 
 require_relative 'utils'
 require_relative 'scope'
+require_relative 'component'
 
 require_relative 'cfml/node'
 require_relative 'cfml/syntax'

@@ -1,5 +1,5 @@
 module Yugo
-  module Component
+  class Component < Yugo::Struct
     def self.displayname(name = nil)
       if name
         @displayname = name
@@ -14,6 +14,11 @@ module Yugo
       else
         @hint
       end
+    end
+
+    def initialize(*args)
+      super()
+      init(*args)
     end
   end
 end

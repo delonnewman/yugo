@@ -10,6 +10,7 @@ gem 'rack-contrib'
 gem 'warbler', '2.0.5'
 gem 'awesome_print'
 gem 'thor'
+gem 'unparser'
 
 gem 'contracts'
 gem 'gen-test', path: '../gen-test'

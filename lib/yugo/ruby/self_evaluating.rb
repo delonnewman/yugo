@@ -6,14 +6,6 @@ module Yugo
       def initialize(value)
         @value = value
       end
-
-      def compile
-        @value.to_s
-      end
-
-      def to_sexp
-        @value
-      end
     end
   end
 end

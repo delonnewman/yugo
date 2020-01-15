@@ -3,6 +3,7 @@ module Yugo
     class InstanceVariable < Syntax
       attr_reader :name
 
+      Contract Identifier => C::Any
       def initialize(name)
         @name = name
       end
@@ -12,7 +13,7 @@ module Yugo
       end
 
       def to_sexp
-        [:instance_varaible, @name.to_sexp]
+        s(:ivar, @name.symbol)
       end
     end
   end

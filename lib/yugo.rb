@@ -1,10 +1,12 @@
 require 'bundler/setup'
 require 'java'
 
+require 'ast'
+require 'contracts'
+require 'rack'
 require 'thor'
 require 'treetop'
-require 'rack'
-require 'contracts'
+require 'unparser'
 
 require 'el'
 require 'erb'

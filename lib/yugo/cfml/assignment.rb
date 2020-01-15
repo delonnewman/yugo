@@ -5,12 +5,14 @@ module Yugo
         # TODO: add function scoped variables
         scope_ = function_scoped? ? scope : Yugo::CFML::TOPLEVEL
         if assignee.is_a?(Yugo::CFML::Identifier)
+          puts "Identifier: #{assignee.inspect}"
           name = assignee.text_value.downcase.to_sym
           scope_.add_variable(name, true)
           exp = expression.ruby_ast(scope) # expression must be evaluated be for the assignment identifier is added to scope
           scope_.add_variable(name, exp)
           Yugo::Ruby::Assignment.new(assignee.ruby_ast(scope), exp)
         elsif assignee.is_a?(Yugo::CFML::PropertyAccess)
+          puts "MemberExpression: #{assignee.inspect}"
           exp = expression.ruby_ast(scope)
           Yugo::Ruby::Assignment.new(assignee.ruby_ast(scope), exp)
         else

@@ -3,8 +3,6 @@ module Yugo
     class Program < Syntax
       include Enumerable
 
-      # TODO: add indentation level?
-
       Contract C::Maybe[C::ArrayOf[Syntax]] => C::Any
       def initialize(expressions = nil)
         @expressions = expressions || []
@@ -22,12 +20,18 @@ module Yugo
         @expressions.empty?
       end
 
-      def compile
-        "\n" + @expressions.map(&:compile).join("\n") + "\n"
+      def one?
+        @expressions.count == 1
       end
 
       def to_sexp
-        [:program] + @expressions.map(&:to_sexp)
+        if empty?
+          nil
+        elsif one?
+          @expressions.first.to_sexp
+        else
+          s(:begin, *@expressions.map(&:to_sexp))
+        end
       end
     end
   end

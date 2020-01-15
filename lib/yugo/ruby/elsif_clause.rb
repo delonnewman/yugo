@@ -1,6 +1,9 @@
 module Yugo
   module Ruby
     class ElsifClause < Syntax
+      attr_reader :predicate
+
+      Contract Syntax => C::Any
       def initialize(predicate)
         @predicate = predicate
       end

@@ -8,12 +8,12 @@ module Yugo
         @name = name
       end
 
-      def compile
-        "@#{@name.compile}"
+      def symbol
+        :"@#{@name.symbol}"
       end
 
       def to_sexp
-        s(:ivar, @name.symbol)
+        s(:ivar, symbol)
       end
     end
   end

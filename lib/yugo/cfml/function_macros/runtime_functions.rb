@@ -9,7 +9,7 @@ module Yugo
         # TODO: translate arguments to defined?
         def isdefined(node, scope)
           args = Yugo::Utils.function_arguments(node, scope)
-          Yugo::Ruby::MethodCall.new(
+          Yugo::Ruby::FunctionApplication.new(
             Yugo::Ruby::Identifier.from(:defined?), args)
         end
       end

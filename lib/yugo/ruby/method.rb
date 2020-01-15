@@ -16,7 +16,7 @@ module Yugo
         if @body.empty?
           s(:def, name, args, nil)
         else
-          s(:def, name, args, *@body.map(&:to_sexp))
+          s(:def, name, args, @body.to_sexp)
         end
       end
     end

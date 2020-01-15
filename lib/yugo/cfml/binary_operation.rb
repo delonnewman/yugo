@@ -16,7 +16,7 @@ module Yugo
       end
 
       def contains_operator(left, right, scope)
-        Yugo::Ruby::MethodResolution.new(
+        Yugo::Ruby::Send.new(
           left.ruby_ast(scope),
           Yugo::Ruby::Identifier.from(:include?),
           [right.ruby_ast(scope)]
@@ -25,11 +25,11 @@ module Yugo
 
       def equal_operator(op, left, right, scope)
         if left.is_a?(CFML::Null)
-          Yugo::Ruby::MethodResolution.new(
+          Yugo::Ruby::Send.new(
             right.ruby_ast(scope),
             Yugo::Ruby::Identifier.from(:nil?))
         elsif right.is_a?(CFML::Null)
-          Yugo::Ruby::MethodResolution.new(
+          Yugo::Ruby::Send.new(
             left.ruby_ast(scope),
             Yugo::Ruby::Identifier.from(:nil?))
         else

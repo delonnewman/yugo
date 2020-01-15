@@ -5,7 +5,7 @@ module Yugo
         if (m = FunctionMacros.macro(tag))
           m.call(self, scope)
         else
-          Yugo::Ruby::MethodCall.new(
+          Yugo::Ruby::FunctionApplication.new(
               identifier.ruby_ast(scope, opts),
               Yugo::Utils.function_arguments(self, scope)
           )

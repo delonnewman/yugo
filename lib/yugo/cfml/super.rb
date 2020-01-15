@@ -2,10 +2,9 @@ module Yugo
   module CFML
     class Super < Node
       def ruby_ast(_scope)
-        Yugo::Ruby::MethodResolution.new(
+        Yugo::Ruby::Send.new(
           Yugo::Ruby::Identifier.from(:self),
-          Yugo::Ruby::MethodCall.new(
-            Yugo::Ruby::Identifier.from(:class)))
+          Yugo::Ruby::Identifier.from(:class))
       end
     end
   end

@@ -24,11 +24,20 @@ module Yugo
         end
       end
 
+      def assignee_sexp
+        case @assignee
+        when InstanceVariable, BlockVariable
+          @assignee.symbol
+        else
+          @assignee.to_sexp
+        end
+      end
+
       def to_sexp
         if @operator
-          s(:'op-asgn', s(sexp_tag, @assignee.to_sexp), @assigned.to_sexp)
+          s(:'op-asgn', s(sexp_tag, assignee_sexp), @assigned.to_sexp)
         else
-          s(sexp_tag, @assignee.to_sexp, @assigned.to_sexp)
+          s(sexp_tag, assignee_sexp, @assigned.to_sexp)
         end
       end
     end

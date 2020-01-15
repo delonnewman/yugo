@@ -3,6 +3,7 @@ module Yugo
     class Identifier < Syntax
       attr_reader :name
 
+      Contract C::RespondTo[:to_sym] => Identifier
       def self.from(name)
         @idents ||= {}
         sym = name.to_sym

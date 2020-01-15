@@ -10,7 +10,7 @@ module Yugo
       end
 
       def to_sexp
-        :nil
+        s(:nil)
       end
     end
   end

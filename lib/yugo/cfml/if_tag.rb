@@ -21,7 +21,8 @@ module Yugo
         if scope.erb_context?
           Yugo::ERB::Content.new(nodes)
         else
-          Yugo::Ruby::Program.new(nodes)
+          puts "NODES: #{nodes.map(&:class).inspect}"
+          Yugo::Ruby::If.from(nodes)
         end
       end
 

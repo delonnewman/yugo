@@ -18,7 +18,7 @@ module Yugo
         else
           scope.add_variable(ident.symbol, default) unless name.method_access?
           Yugo::ERB::StatementTag.new(
-            Yugo::Ruby::Assignment.new(assignee, default.ruby_ast(scope), :'||='))
+            Yugo::Ruby::Assignment.new(assignee, default.ruby_ast(scope), :'||'))
         end
       end
     end

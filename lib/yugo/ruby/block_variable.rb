@@ -8,6 +8,10 @@ module Yugo
         @name = name
       end
 
+      def symbol
+        @name.symbol
+      end
+
       def to_sexp
         s(:lvar, @name.symbol)
       end

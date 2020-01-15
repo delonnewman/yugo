@@ -11,6 +11,7 @@ gem 'warbler', '2.0.5'
 gem 'awesome_print'
 gem 'thor'
 gem 'unparser'
+gem 'puma'
 
 gem 'contracts'
 gem 'gen-test', path: '../gen-test'

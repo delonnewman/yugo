@@ -24,7 +24,7 @@ module Yugo
 
         def init(node, scope)
           args = Yugo::Utils.function_arguments(node, scope)
-          Yugo::Ruby::MethodCall.new(Yugo::Ruby::Identifier.from(:new), args)
+          Yugo::Ruby::FunctionApplication.new(Yugo::Ruby::Identifier.from(:new), args)
         end
       end
     end

@@ -24,7 +24,7 @@ BUNDLER_LOCK_FILE     := $(PROJECT_ROOT)/Gemfile.lock
 JAVA_VERSION          := 1.8.0
 export JAVA_HOME      := $(shell /usr/libexec/java_home -v $(JAVA_VERSION))
 
-PHONY: all test help deps repl clean
+PHONY: all test help deps repl clean preview
 
 all: deps
 
@@ -33,6 +33,9 @@ setup: $(RUBY_INSTALL_PATH) $(BUNDLER_BIN)
 deps: $(BUNDLER_LOCK_FILE)
 
 test: deps
+
+preview:
+	cd examples && rackup -s puma -p 3000 && cd ..
 
 repl: deps
 	pry -r ./lib/yugo.rb

@@ -4,7 +4,7 @@ module Yugo
 
     class ReturnTag < Node
       def ruby_ast(scope)
-        Yugo::Ruby::Macro.new(Yugo::Ruby::Identifier.from(:return), [expression.ruby_ast(scope)])
+        Yugo::Ruby::Return.new(expression.ruby_ast(scope))
       end
     end
 

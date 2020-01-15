@@ -3,6 +3,7 @@ require 'singleton'
 module Yugo
   module Ruby
     class Boolean < SelfEvaluating; end
+
     class True < Boolean
       include Singleton
 
@@ -14,6 +15,7 @@ module Yugo
         s(:true)
       end
     end
+
     class False < Boolean
       include Singleton
 

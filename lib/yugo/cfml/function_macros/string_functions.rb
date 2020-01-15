@@ -4,16 +4,16 @@ module Yugo
       module StringFunctions
         def findnocase(node, scope)
           args = Yugo::Utils.function_arguments(node, scope)
-          substr = Yugo::Ruby::MethodResolution.new(args[0], Yugo::Ruby::Identifier.from(:downcase))
+          substr = Yugo::Ruby::Send.new(args[0], Yugo::Ruby::Identifier.from(:downcase))
           args_ = if args.length == 3
                     [substr, args[2]]
                   else
                     [substr]
                   end
   
-          ast = Yugo::Ruby::MethodResolution.new(
-            Yugo::Ruby::MethodResolution.new(args[1], Yugo::Ruby::Identifier.from(:downcase)),
-            Yugo::Ruby::MethodCall.new(Yugo::Ruby::Identifier.from(:index), args_))
+          ast = Yugo::Ruby::Send.new(
+                  Yugo::Ruby::Send.new(args[1], Yugo::Ruby::Identifier.from(:downcase)),
+                  Yugo::Ruby::Identifier.from(:index), args_)
   
           if not scope.boolean_context?
             Yugo::Ruby::BinaryOperation.new(
@@ -31,18 +31,10 @@ module Yugo
                     [args[0]]
                   end
   
-          ast = Yugo::Ruby::MethodResolution.new(
-            args[1],
-            Yugo::Ruby::MethodCall.new(
-              Yugo::Ruby::Identifier.from(:index), args_)
-          )
+          ast = Yugo::Ruby::Send.new(args[1], Yugo::Ruby::Identifier.from(:index), args_)
   
           if not scope.boolean_context?
-            Yugo::Ruby::BinaryOperation.new(
-              Yugo::Ruby::Operator.new(:'||'),
-              ast,
-              Yugo::Ruby::Integer.new(0)
-            )
+            Yugo::Ruby::BinaryOperation.new(Yugo::Ruby::Operator.new(:'||'), ast, Yugo::Ruby::Integer.new(0))
           else
             ast
           end

@@ -10,9 +10,9 @@ module Yugo
       end
 
       Contract C::Maybe[C::Or[Identifier, Constant]], Identifier => C::Any
-      def initialize(scope, identifer)
+      def initialize(scope, identifier)
         @scope = scope
-        @identifer = identifier
+        @identifier = identifier
       end
 
       def to_sexp

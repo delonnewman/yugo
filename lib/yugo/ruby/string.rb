@@ -35,6 +35,12 @@ module Yugo
         Yugo::Ruby::InstanceVariable.new(as_identifier)
       end
 
+      def as_constant
+        @value.split('.').reduce(nil) do |const, part|
+          Yugo::Ruby::Constant.new(const, Yugo::Ruby::Identifier.from(part.capitalize))
+        end
+      end
+
       def as_method_access
         obj, method = @value.split('.')
         Yugo::Ruby::MethodResolution.new(

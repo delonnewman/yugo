@@ -10,7 +10,7 @@ module Yugo
 
     class FunctionTag < Node
       def ruby_ast(scope)
-        scope_ = scope.new_scope(:function)
+        scope_ = scope.in_function_scope
         attrs = Yugo::Utils.attribute_list(open_function_tag.attribute_list, scope_)
         name = attrs.fetch(:name)
 

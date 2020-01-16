@@ -6,12 +6,12 @@ module Yugo
 
         def createobject(node, scope)
           args = Yugo::Utils.function_arguments(node, scope)
+          raise "Wrong number of arguments expected 2, got: #{args.length}" if args.length != 2
           case args[0]
           when Yugo::Ruby::String
             case args[0].value
             when 'component'
-              # load component
-              raise "loading components is not implmented"
+              args[1].as_constant
             when 'java'
               Yugo::Utils.java_class(args[1].value)
             else

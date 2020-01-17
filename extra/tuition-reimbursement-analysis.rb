@@ -1,4 +1,4 @@
-{:totals=>
+DATA = {:totals=>
   {:tags=>
     ["cf_app_canned_mail",
      "cf_assert",

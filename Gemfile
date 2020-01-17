@@ -1,17 +1,18 @@
 source 'https://rubygems.org'
 
-ruby '2.5.3', engine: :jruby, engine_version: '9.2.6.0'
-
 gem 'treetop'
 gem 'rspec'
 gem 'el', path: '../el'
 gem 'rack'
 gem 'rack-contrib'
-gem 'warbler', '2.0.5'
+gem 'warbler', '2.0.5' if RUBY_ENGINE == 'java'
 gem 'awesome_print'
 gem 'thor'
 gem 'unparser'
 gem 'puma'
+gem 'sequel'
+#gem 'sqlite3' unless RUBY_ENGINE == 'java'
+gem 'jdbc-sqlite3'
 
 gem 'contracts'
 gem 'gen-test', path: '../gen-test'

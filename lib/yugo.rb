@@ -1,5 +1,5 @@
 require 'bundler/setup'
-require 'java'
+require 'java' if RUBY_PLATFORM == 'java'
 
 require 'ast'
 require 'contracts'
@@ -7,12 +7,15 @@ require 'rack'
 require 'thor'
 require 'treetop'
 require 'unparser'
+require 'sequel'
 
 require 'el'
 require 'erb'
 require 'uri'
 require 'logger'
 
+require_relative 'yugo/string_utils'
+require_relative 'ext_core'
 require_relative 'yugo/runtime'
 require_relative 'yugo/cfml'
 require_relative 'yugo/application'

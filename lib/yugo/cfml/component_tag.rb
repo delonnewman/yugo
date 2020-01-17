@@ -6,7 +6,6 @@ module Yugo
         attrs = Yugo::Utils.attribute_list(open_component_tag.attribute_list, scope_)
         name = attrs.fetch(:displayname)
         parent = attrs[:extends]
-        doc = attrs[:hint]
 
         init = init_code(scope_)
         ast = if init.empty? && parent.nil?
@@ -17,13 +16,6 @@ module Yugo
 
         scope.add_variable(name.as_symbol, ast)
 
-#        ast = if doc.nil?
-#          ast
-#        else
-#          Yugo::Ruby::Program.new([
-#            Yugo::Ruby::Comment.new(doc.value), ast])
-#        end
-
         if scope.erb_context?
           Yugo::ERB::StatementTag.new(ast)
         else
@@ -31,7 +23,7 @@ module Yugo
         end
       end
 
-      def methods(scope)
+      def functions(scope)
         component_body.content
           .select { |elem| elem.is_a?(FunctionTag) }
           .map { |f| f.ruby_ast(scope) }
@@ -39,9 +31,9 @@ module Yugo
 
       def body(init_code, scope)
         exprs = if init_code
-                  [initialize_method(init_code, scope)] + methods(scope)
+                  [initialize_method(init_code, scope)] + functions(scope)
                 else
-                  methods(scope)
+                  functions(scope)
                 end
         Yugo::Ruby::Program.new(exprs)
       end

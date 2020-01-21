@@ -65,7 +65,6 @@ def analysis(dir)
 end
 
 occurances = analysis(DIR)
-pp occurances
 DB.transaction do
   occurances.each do |occurance|
     DB[:occurances].insert(occurance)

@@ -115,7 +115,11 @@ grammar CFML
   end
 
   rule query_tag_content
-    (!end_query_tag (quote / char))* <Yugo::CFML::Content>
+    (!end_query_tag (queryparam_tag / quote / char))* <Yugo::CFML::Content>
+  end
+
+  rule queryparam_tag
+    '<' [cC] [fF] [qQ] [uU] [eE] [rR] [yY] [pP] [aA] [rR] [aA] [mM] attribute_list space? '>' <Yugo::QueryParamTag>
   end
 
   rule open_query_tag

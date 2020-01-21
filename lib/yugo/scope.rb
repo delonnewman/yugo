@@ -28,6 +28,10 @@ module Yugo
       !function_scope? and !component_scope?
     end
 
+    def query_scope?
+      in_scope_of?(:query)
+    end
+
     def function_scope?
       in_scope_of?(:function)
     end
@@ -54,6 +58,10 @@ module Yugo
 
     def in_component_scope
       new_scope(:component)
+    end
+
+    def in_query_scope
+      new_scope(:query)
     end
 
     def in_boolean_context

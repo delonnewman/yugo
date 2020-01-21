@@ -45,6 +45,7 @@ require_relative 'cfml/include_tag'
 require_relative 'cfml/param_tag'
 require_relative 'cfml/function_tag'
 require_relative 'cfml/component_tag'
+require_relative 'cfml/query_tag'
 
 require_relative 'cfml/parser'
 

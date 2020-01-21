@@ -27,6 +27,10 @@ module Yugo
         @value.downcase.to_sym
       end
 
+      def as_syntax_symbol
+        Yugo::Ruby::Symbol.new(as_symbol)
+      end
+
       def as_identifier
         Yugo::Ruby::Identifier.from(as_symbol)
       end

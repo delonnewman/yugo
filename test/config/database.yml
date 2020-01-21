@@ -1,3 +1,0 @@
-progress:
-  adapter: sqlite
-  database: db/progress.db

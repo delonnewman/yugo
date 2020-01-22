@@ -14,6 +14,7 @@ DB  = Sequel.jdbc("jdbc:sqlite://#{__dir__}/../examples/db/insight.sqlite3")
 TAG_TYPE      = 'tag'.freeze
 ATTR_TYPE     = 'attribute'.freeze
 FUNCTION_TYPE = 'function'.freeze
+NO_ATTRS      = %w{cfset cfif cfelse cfelseif}.to_set.freeze
 
 DB.create_table?(:occurances) do
   primary_key :id
@@ -26,13 +27,22 @@ end
 
 def tag_parts(occurances)
   occurances.flat_map do |occ|
-    parts = occ.split(/\s+/)
-    tag = parts.first
-    parts_ = parts.drop(1).select { |x| x.index('=') }.map do |part|
-      attr_name, _ = part.split(/\s*=\s*/)
-      [ATTR_TYPE, "#{tag}:#{attr_name}"]
+    p occ
+    tag = occ.split(/\s+/).first.gsub(/\W/, '').downcase
+    puts "TAG: #{tag.inspect}"
+    if !NO_ATTRS.include?(tag)
+      parts = occ.match(/(cf\w+)(?:\s*(\w+)\s*=.*)*/).captures
+      puts "PARTS: #{parts.inspect}"
+      #parts_ = parts.drop(1).select { |x| x.index('=') }.map do |part|
+      #  attr_name, _ = part.split(/\s*=\s*/)
+      #  [ATTR_TYPE, "#{tag}:#{attr_name}"]
+      #end
+      #parts_.unshift([TAG_TYPE, tag])
+      [[TAG_TYPE, tag]]
+    else
+      puts "NO ATTRS"
+      [[TAG_TYPE, tag]]
     end
-    parts_.unshift([TAG_TYPE, tag])
   end
 end
 
@@ -41,7 +51,7 @@ def tags(code)
     .map(&:scrub)
     .each_with_index
     .select { |(line, _)| line =~ /\<cf\w+/i }
-    .map { |(line, i)| [line.scan(/\<(cf\w+\s+(\w+=["']?(.*)["']?)?)\s*\>/i).map(&:first), i + 1] }
+    .map { |(line, i)| [line.scan(/\<(cf\w+(.*))\s*\>?/i).map(&:first), i + 1] }
     .reject { |(x, _)| x.empty? }
     .flat_map { |(occs, line)| tag_parts(occs).map { |(tag, name)| { feature: name, feature_type: tag, line_number: line } } }
 end
@@ -77,9 +87,11 @@ def analysis(dir)
     .map { |x| x.merge(app: app) }
 end
 
-occurances = analysis(DIR)
-DB.transaction do
-  occurances.each do |occurance|
-    DB[:occurances].insert(occurance)
-  end
-end
+#occurances = analysis(DIR)
+#DB.transaction do
+#  occurances.each do |occurance|
+#    DB[:occurances].insert(occurance)
+#  end
+#end
+
+pp tags(IO.read(DIR))

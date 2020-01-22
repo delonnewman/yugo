@@ -1,6 +1,7 @@
 module Yugo
   class Application
     DEFAULT_PAGES_PATH = '/pages'.freeze
+    DB_CONFIG_FILE = '/config/database.yml'.freeze
 
     REQUEST_PATH = 'REQUEST_PATH'.freeze
     CONTENT_TYPE = 'Content-Type'.freeze
@@ -24,7 +25,7 @@ module Yugo
     HTML
 
     # Configuration options
-    attr_accessor :pages_path, :root_path, :cache_pages, :session_key, :logger
+    attr_accessor :pages_path, :root_path, :cache_pages, :session_key, :logger, :db_config_file
 
     # Provides 'server' scope a struct with various server information
     # (see Yugo::Page#server, and https://cfdocs.org/server-scope)
@@ -35,10 +36,11 @@ module Yugo
       @server = Yugo::Struct.new
 
       # set config defaults
-      @root_path   = config.fetch(:root_path, Dir.pwd)
-      @pages_path  = config.fetch(:pages_path, File.join(@root_path, DEFAULT_PAGES_PATH))
-      @cache_pages = config.fetch(:cache_pages, ENV['RACK_ENV'] == 'production')
-      @logger      = config.fetch(:logger, Logger.new(STDERR))
+      @root_path      = config.fetch(:root_path, Dir.pwd)
+      @pages_path     = config.fetch(:pages_path, File.join(@root_path, DEFAULT_PAGES_PATH))
+      @cache_pages    = config.fetch(:cache_pages, ENV['RACK_ENV'] == 'production')
+      @logger         = config.fetch(:logger, Logger.new(STDERR))
+      @db_config_file = config.fetch(:db_config_file, File.join(@root_path, DB_CONFIG_FILE))
       @middleware  = {}
 
       yield self if block_given?
@@ -48,6 +50,14 @@ module Yugo
       use Rack::ShowExceptions
       use Rack::Session::Cookie, key: session_key
       # TODO: look into Rack::Static for serving static files
+    end
+
+    def db_config
+      @db_config ||= YAML.load_file(db_config_file).transform_keys(&:to_sym)
+    end
+
+    def db(ds)
+      @db ||= Sequel.connect(db_config.fetch(ds))
     end
 
     def pages
@@ -71,7 +81,7 @@ module Yugo
       self
     end
 
-    # compose middleware and return resulting app
+    # compose middleware and return resulting rack app
     def app
       @middleware.reduce(self) do |app, (klass, args)|
         klass.new(app, *args)

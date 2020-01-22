@@ -1,0 +1,22 @@
+<html>
+<head>
+  <title>Yugo Insight</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+  <nav class="navbar navbar-light bg-light mb-2">
+    <a class="navbar-brand" href="#">
+      Yugo Insight
+    </a>
+  </nav>
+  <main class="container">
+    <h1>Tags</h1>
+    <% @tags = db[:insight][:occurances].select(:feature).group_by(:feature).where(feature_type: 'tag').map { |x| x[:feature] } %>
+    <ul>
+      <% @tags.each do |tag| %>
+        <li><%= tag.downcase %></li>
+      <% end %>
+    </ul>
+  </main>
+</body>
+</html>

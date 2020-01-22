@@ -105,6 +105,14 @@ module Yugo
       end
     end
 
+    def params
+      @params ||= if @env
+                    _form_variables(@env).merge(_url_variables(@env))
+                  else
+                    {}
+                  end
+    end
+
     def include(file)
       raise "include can only be called from within a page template" if @env.nil?
       logger.info "including: #{file.inspect}"
@@ -113,6 +121,10 @@ module Yugo
       return @includes[file] if application.cache_pages? && @includes.key?(file)
 
       @includes[file] = Page.new(application, File.join(File.dirname(path), file)).render(@env)
+    end
+
+    def db
+      Yugo::Database.new(@application)
     end
 
     def evaluate(str)

@@ -28,7 +28,7 @@ module Yugo
 
         ast = Yugo::Ruby::Index.new(
                 Yugo::Ruby::Index.new(
-                  Yugo::Ruby::Constant.from(:'Yugo::DB'), [ds.as_syntax_symbol]),
+                  Yugo::Ruby::BlockVariable.new(Yugo::Ruby::Identifier.from(:db)), [ds.as_syntax_symbol]),
                 [query] + params)
 
         ast = if name.nil?

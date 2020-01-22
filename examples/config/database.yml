@@ -1,3 +1,3 @@
-progress:
-  adapter: sqlite
-  database: db/progress.db
+insight:
+  adapter: jdbc
+  database: jdbc:sqlite:db/insight.sqlite3

@@ -46,6 +46,8 @@ require_relative 'cfml/param_tag'
 require_relative 'cfml/function_tag'
 require_relative 'cfml/component_tag'
 require_relative 'cfml/query_tag'
+require_relative 'cfml/switch_tag'
+require_relative 'cfml/loop_tag'
 
 require_relative 'cfml/parser'
 

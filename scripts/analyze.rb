@@ -9,28 +9,41 @@ if ARGV.count < 1
 end
 
 DIR = ARGV.first
-DB = Sequel.jdbc("jdbc:sqlite://#{__dir__}/../examples/db/insight.sqlite3")
+DB  = Sequel.jdbc("jdbc:sqlite://#{__dir__}/../examples/db/insight.sqlite3")
 
-TAG_TYPE = 'tag'
-FUNCTION_TYPE = 'function'
+TAG_TYPE      = 'tag'.freeze
+ATTR_TYPE     = 'attribute'.freeze
+FUNCTION_TYPE = 'function'.freeze
 
 DB.create_table?(:occurances) do
   primary_key :id
-  String  :app, null: false, index: true
-  String  :file, null: false, index: true
-  Integer :line_number, null: false, index: true
-  String  :feature, null: false, index: true
+  String  :app,          null: false, index: true
+  String  :file,         null: false, index: true
+  Integer :line_number,  null: false, index: true
+  String  :feature,      null: false, index: true
   String  :feature_type, null: false, index: true
+end
+
+def tag_parts(occurances)
+  occurances.flat_map do |occ|
+    parts = occ.split(/\s+/)
+    tag = parts.first
+    parts_ = parts.drop(1).select { |x| x.index('=') }.map do |part|
+      attr_name, _ = part.split(/\s*=\s*/)
+      [ATTR_TYPE, "#{tag}:#{attr_name}"]
+    end
+    parts_.unshift([TAG_TYPE, tag])
+  end
 end
 
 def tags(code)
   code.lines
     .map(&:scrub)
     .each_with_index
-    .select { |(line, _i)| line =~ /\<cf\w+/i }
-    .map { |(line, i)| [line.scan(/\<(cf\w+)/i).map(&:first), i + 1] }
-    .flat_map { |(features, line)| features.map { |f| [f, line] } }
-    .map { |(feature, line)| { feature: feature, feature_type: TAG_TYPE, line_number: line } }
+    .select { |(line, _)| line =~ /\<cf\w+/i }
+    .map { |(line, i)| [line.scan(/\<(cf\w+\s+(\w+=["']?(.*)["']?)?)\s*\>/i).map(&:first), i + 1] }
+    .reject { |(x, _)| x.empty? }
+    .flat_map { |(occs, line)| tag_parts(occs).map { |(tag, name)| { feature: name, feature_type: tag, line_number: line } } }
 end
 
 def functions(code)
@@ -58,7 +71,7 @@ end
 
 def analysis(dir)
   app = title(dir)
-  files = Dir["#{dir}/**/*.{cfm,cfml,cfc}"]
+  Dir["#{dir}/**/*.{cfm,cfml,cfc}"]
     .map { |rel| File.expand_path(File.join(dir, rel)) }
     .flat_map { |file| file_analysis(file) }
     .map { |x| x.merge(app: app) }

@@ -9,7 +9,7 @@ gem 'warbler', '2.0.5' if RUBY_ENGINE == 'java'
 gem 'awesome_print'
 gem 'thor'
 gem 'unparser'
-gem 'puma'
+gem 'puma', ">= 4.3.3"
 gem 'sequel'
 #gem 'sqlite3' unless RUBY_ENGINE == 'java'
 gem 'jdbc-sqlite3'

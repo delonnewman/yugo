@@ -22,7 +22,7 @@ module Yugo
           if resolve_identifiers
             raise "Variable #{text_value} is undefined."
           else
-            ident
+            ident.as_symbol
           end
         end
       end

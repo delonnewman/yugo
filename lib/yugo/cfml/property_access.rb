@@ -8,7 +8,7 @@ module Yugo
         else
           tail.elements.reduce(object) do |obj, elem|
             puts "#{elem.class} - #{elem.text_value}"
-            Yugo::Ruby::MethodResolution.new(obj, elem.elements[3].property.ruby_ast(scope, resolve_identifiers: false))
+            Yugo::Ruby::Send.new(obj, elem.elements[3].property.ruby_ast(scope, resolve_identifiers: false))
           end
         end
       end

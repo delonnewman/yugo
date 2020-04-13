@@ -15,6 +15,7 @@ TAG_TYPE      = 'tag'.freeze
 ATTR_TYPE     = 'attribute'.freeze
 FUNCTION_TYPE = 'function'.freeze
 NO_ATTRS      = %w{cfset cfif cfelse cfelseif}.to_set.freeze
+ATTR_LIST_PAT = /(?:\s*(\w+)\s*=.+)*/
 
 DB.create_table?(:occurances) do
   primary_key :id
@@ -31,7 +32,7 @@ def tag_parts(occurances)
     tag = occ.split(/\s+/).first.gsub(/\W/, '').downcase
     puts "TAG: #{tag.inspect}"
     if !NO_ATTRS.include?(tag)
-      parts = occ.match(/(cf\w+)(?:\s*(\w+)\s*=.*)*/).captures
+      parts = occ.scan(/(?:\s*(\w+)\s*=.+)*/).map(&:first).reject(&:nil?)
       puts "PARTS: #{parts.inspect}"
       #parts_ = parts.drop(1).select { |x| x.index('=') }.map do |part|
       #  attr_name, _ = part.split(/\s*=\s*/)

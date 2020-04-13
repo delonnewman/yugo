@@ -1,7 +1,7 @@
 NAME
 ====
 
-Yugo (融合) (Fusion in Japanese) - A tool for converting UNMH legacy ColdFusion applications
+Yugo (融合) (Fusion in Japanese) - A tool for converting legacy ColdFusion applications
 into Ruby / Rack applications.
 
 SYNOPSIS
@@ -12,4 +12,4 @@ SYNOPSIS
 CONTRIBUTORS
 ============
 
-Delon Newman (Maintainer) <delnewman@salud.unm.edu>
+Delon Newman (Maintainer) <contact@delonnewman.name>
